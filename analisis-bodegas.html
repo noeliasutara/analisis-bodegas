@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis de Mercado · Bodegas Mendoza 2026</title>
+<meta name="description" content="Tablero interactivo de análisis de mercado de bodegas mendocinas: distribución territorial, tech stack, volumen y ventas online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0d14;--card:#111520;--card2:#151b28;--border:rgba(255,255,255,0.07);--ba:rgba(168,113,255,0.25);--a1:#a871ff;--a2:#ff6b6b;--a3:#43e97b;--a4:#38a9f5;--a5:#ffcd47;--tx:#f0f4ff;--ts:#8b95b0;--tm:#4a5568;--r:16px;--rs:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.6}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0f1625,#1a0a2e,#0a1a1f);border-bottom:1px solid var(--ba);padding:48px 40px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;left:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(168,113,255,.12),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;right:80px;width:320px;height:320px;background:radial-gradient(circle,rgba(67,233,123,.07),transparent 70%);pointer-events:none}
+.hero-in{max-width:1400px;margin:0 auto;position:relative;z-index:1}
+.badge-hero{display:inline-flex;align-items:center;gap:8px;background:rgba(168,113,255,.12);border:1px solid rgba(168,113,255,.3);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--a1);text-transform:uppercase;margin-bottom:20px}
+.badge-hero::before{content:'●';font-size:8px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:'Outfit',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;background:linear-gradient(135deg,#f0f4ff,#a871ff 60%,#43e97b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.15}
+.hero-sub{color:var(--ts);font-size:16px;margin-bottom:32px;max-width:640px}
+
+/* TRENDS */
+.trends{background:linear-gradient(135deg,rgba(168,113,255,.06),rgba(67,233,123,.04));border:1px solid var(--ba);border-radius:var(--r);padding:28px 32px;margin-top:32px}
+.tlabel{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--a1);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.tlabel::after{content:'';flex:1;height:1px;background:rgba(168,113,255,.2)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px}
+.tcard{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--rs);padding:16px 18px;transition:border-color .2s,transform .2s;cursor:default}
+.tcard:hover{border-color:rgba(168,113,255,.35);transform:translateY(-2px)}
+.tcard .ti{font-size:22px;margin-bottom:8px}
+.tcard .tv{font-size:22px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--a3);margin-bottom:4px}
+.tcard .tt{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px}
+.tcard .tx{font-size:12px;color:var(--ts);line-height:1.5}
+.cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(168,113,255,.15),rgba(67,233,123,.1));border:1px solid rgba(168,113,255,.3);border-radius:100px;padding:10px 22px;font-size:13px;font-weight:600;color:var(--a1);cursor:pointer;transition:all .25s;margin-top:4px;font-family:inherit}
+.cta:hover{background:rgba(168,113,255,.25);transform:translateX(3px)}
+.cta::after{content:'→';transition:transform .2s}
+.cta:hover::after{transform:translateX(4px)}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:48px 40px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:40px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;transition:border-color .25s,transform .25s}
+.sc:hover{border-color:rgba(168,113,255,.3);transform:translateY(-3px)}
+.sc .sl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tm);margin-bottom:8px}
+.sc .sv{font-size:30px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--tx)}
+.sc .ss{font-size:12px;color:var(--ts);margin-top:4px}
+
+/* SECTION TITLE */
+.stitle{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:var(--tx);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.stitle::before{content:'';width:4px;height:22px;background:linear-gradient(var(--a1),var(--a3));border-radius:4px}
+
+/* FILTERS */
+.fbar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 24px;margin-bottom:32px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tm)}
+.fg select{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--tx);padding:8px 30px 8px 14px;font-size:13px;font-family:inherit;cursor:pointer;min-width:150px;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b95b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.fg select:focus{outline:none;border-color:var(--a1)}
+.breset{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:var(--rs);color:var(--a2);padding:8px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.breset:hover{background:rgba(255,107,107,.2)}
+.finfo{margin-left:auto;font-size:13px;color:var(--ts);display:flex;align-items:center;gap:6px}
+.fcount{font-weight:700;color:var(--a1);font-size:18px}
+
+
+/* CHIPS */
+.chip { display:inline-flex; align-items:center; gap:6px; background:rgba(168,113,255,.15); border:1px solid rgba(168,113,255,.3); border-radius:100px; padding:4px 12px; font-size:12px; font-weight:600; color:var(--a1); }
+.chip span { color:var(--ts); font-weight:400; }
+.chip-btn { background:none; border:none; color:var(--a2); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; padding:0; margin-left:4px; opacity:0.7; transition:opacity .2s; }
+.chip-btn:hover { opacity:1; }
+
+/* CHARTS */
+.cgrid{display:grid;gap:24px;margin-bottom:32px}
+.cr2{grid-template-columns:1fr 1fr}
+.cr3{grid-template-columns:1fr 1fr 1fr}
+.cr1{grid-template-columns:1fr}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:border-color .25s}
+.cc:hover{border-color:rgba(168,113,255,.2)}
+.ct{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.cs{font-size:12px;color:var(--ts);margin-bottom:20px}
+.cw{position:relative}
+.cw-center{display:flex;align-items:center;justify-content:center;min-height:260px}
+
+/* TABLE */
+.tsec{margin-top:8px}
+.tctrl{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.swrap{position:relative;flex:1;min-width:200px}
+.swrap input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--tx);padding:9px 14px 9px 38px;font-size:13px;font-family:inherit;transition:border-color .2s}
+.swrap input:focus{outline:none;border-color:var(--a1)}
+.swrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
+.psel{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--ts);padding:9px 12px;font-size:13px;font-family:inherit;cursor:pointer}
+.expbtn{font-size:12px;color:var(--ts);cursor:pointer;background:none;border:none;font-family:inherit;display:flex;align-items:center;gap:4px}
+.expbtn:hover{color:var(--a1)}
+.twrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--ts);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:12px 16px;text-align:left;cursor:pointer;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;transition:color .2s}
+thead th:hover{color:var(--a1)}
+thead th.sa::after{content:' ↑';color:var(--a1)}
+thead th.sd::after{content:' ↓';color:var(--a1)}
+
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+tbody tr:hover{background:rgba(168,113,255,.1) !important;}
+
+tbody td{padding:11px 16px;color:var(--tx);vertical-align:middle}
+.tn{font-weight:600}
+.tz{color:var(--ts);font-size:12px}
+.bdg{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap}
+.bt-Boutique{background:rgba(67,233,123,.12);color:#43e97b}
+.bt-Chica{background:rgba(56,169,245,.12);color:#38a9f5}
+.bt-Mediana{background:rgba(168,113,255,.12);color:#a871ff}
+.bt-Grande{background:rgba(255,205,71,.12);color:#ffcd47}
+.bt-Proyecto{background:rgba(255,255,255,.05);color:var(--ts)} .bt-Desconocido{background:rgba(255,255,255,.05);color:var(--ts)}
+.bm-DTC{background:rgba(255,107,107,.1);color:#ff9b9b}
+.bm-Reg{background:rgba(67,233,123,.1);color:#43e97b}
+.bm-Nac{background:rgba(56,169,245,.1);color:#38a9f5}
+.bm-Intl{background:rgba(255,205,71,.1);color:#ffcd47}
+.bm-Bout{background:rgba(168,113,255,.1);color:#a871ff}
+.bs-si{background:rgba(67,233,123,.1);color:#43e97b}
+.bs-no{background:rgba(255,255,255,.05);color:var(--tm)}
+.pag{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:space-between}
+.pinfo{font-size:12px;color:var(--ts)}
+.pbtns{display:flex;gap:6px;align-items:center}
+.pb{width:32px;height:32px;border-radius:8px;background:var(--card2);border:1px solid var(--border);color:var(--ts);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit}
+.pb:hover,.pb.act{background:rgba(168,113,255,.15);border-color:var(--a1);color:var(--a1)}
+.pb:disabled{opacity:.3;cursor:not-allowed}
+
+/* MODAL */
+.mover{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px}
+.mover.open{display:flex}
+.modal{background:#151b28;border:1px solid var(--ba);border-radius:20px;padding:36px;max-width:720px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.mclose{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.07);border:none;border-radius:50%;width:32px;height:32px;color:var(--ts);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.mclose:hover{background:rgba(255,107,107,.2);color:var(--a2)}
+.modal h2{font-family:'Outfit',sans-serif;font-size:22px;font-weight:700;margin-bottom:16px;color:var(--tx)}
+.modal p{font-size:14px;color:var(--ts);line-height:1.8;margin-bottom:12px}
+.mstats{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0}
+.msi{text-align:center;padding:16px 20px;background:rgba(255,255,255,.04);border-radius:12px;flex:1;min-width:100px}
+.msi .v{font-size:28px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--a1)}
+.msi .l{font-size:11px;color:var(--tm);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+
+
+/* FUNNEL SECTION */
+.funnel-section{margin-bottom:40px}
+.funnel-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;align-items:stretch;position:relative}
+.funnel-wrap::before{content:'';position:absolute;top:50%;left:calc(33.33% - 1px);width:calc(33.33% + 2px);height:2px;background:linear-gradient(90deg,rgba(168,113,255,.4),rgba(67,233,123,.4));transform:translateY(-50%);pointer-events:none;z-index:0}
+.fnl-col{display:flex;flex-direction:column;align-items:center;gap:0;z-index:1}
+.fnl-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;width:100%;transition:border-color .25s}
+.fnl-card:hover{border-color:rgba(168,113,255,.3)}
+.fnl-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px;text-align:center}
+.fnl-sub{font-size:11px;color:var(--ts);text-align:center;margin-bottom:16px}
+.fnl-arrow{font-size:28px;color:rgba(168,113,255,.5);padding:8px 0;flex-shrink:0;line-height:1}
+.fnl-legend{display:flex;flex-direction:column;gap:6px;margin-top:12px;width:100%}
+.fnl-leg-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.02);cursor:default;transition:background .15s}
+.fnl-leg-item:hover{background:rgba(255,255,255,.05)}
+.fnl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.fnl-leg-text{flex:1;font-size:11px;color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fnl-leg-vals{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.fnl-leg-n{font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--tx);line-height:1}
+.fnl-leg-pcts{display:flex;gap:4px;align-items:center}
+.fnl-pct-grp{font-size:10px;color:var(--a3);font-weight:600}
+.fnl-pct-tot{font-size:10px;color:var(--ts)}
+.fnl-pct-sep{font-size:10px;color:var(--tm)}
+.fnl-total-badge{text-align:center;margin-bottom:12px;font-size:11px;color:var(--ts)}
+.fnl-total-badge strong{color:var(--a1);font-size:16px;font-family:'Outfit',sans-serif}
+.connector{display:flex;align-items:center;justify-content:center;padding:0 4px;align-self:center;flex-shrink:0}
+.connector svg{opacity:.4}
+@media(max-width:900px){.funnel-wrap{grid-template-columns:1fr}.connector{transform:rotate(90deg)}}
+@media(max-width:900px){
+  .hero{padding:32px 20px 28px}
+  .main{padding:28px 16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cr2,.cr3{grid-template-columns:1fr}
+  .tgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="login-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#09090b;z-index:999999;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;">
+  <div style="background:#18181b;padding:40px;border-radius:16px;border:1px solid #27272a;width:100%;max-width:360px;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+    <div style="text-align:center;margin-bottom:30px;">
+      <h2 style="color:#fff;margin:0 0 8px 0;font-size:24px;font-weight:600;">Acceso Restringido</h2>
+      <p style="color:#a1a1aa;margin:0;font-size:14px;">Ingresa tus credenciales para continuar</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="display:block;color:#a1a1aa;font-size:12px;margin-bottom:8px;font-weight:500;">Usuario</label>
+      <input type="text" id="l-usr" style="width:100%;background:#09090b;border:1px solid #27272a;color:#fff;padding:12px;border-radius:8px;outline:none;font-size:14px;box-sizing:border-box;" autocomplete="off">
+    </div>
+    <div style="margin-bottom:24px;">
+      <label style="display:block;color:#a1a1aa;font-size:12px;margin-bottom:8px;font-weight:500;">Contraseña</label>
+      <input type="password" id="l-pwd" style="width:100%;background:#09090b;border:1px solid #27272a;color:#fff;padding:12px;border-radius:8px;outline:none;font-size:14px;box-sizing:border-box;">
+    </div>
+    <button id="l-btn" style="width:100%;background:#6d28d9;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;transition:background 0.2s;">Ingresar</button>
+    <div id="l-err" style="color:#ef4444;font-size:12px;margin-top:16px;text-align:center;display:none;">Credenciales incorrectas</div>
+  </div>
+</div>
+<script>
+(function(){
+  // Obfuscated hash of "championsys:2026_CH_ecommerce"
+  const _0x1a = ['Y2hhbX','Bpb25zeXM6','MjAyNl9','DSF9lY','29tbWVyY2U='];
+  const _t = _0x1a.join('');
+  
+  if (sessionStorage.getItem('_auth_t') === _t) {
+    document.getElementById('login-overlay').remove();
+    return;
+  }
+  
+  // Hide scrollbar until logged in
+  document.body.style.overflow = 'hidden';
+  
+  const btn = document.getElementById('l-btn');
+  const usr = document.getElementById('l-usr');
+  const pwd = document.getElementById('l-pwd');
+  const err = document.getElementById('l-err');
+  
+  const auth = () => {
+    const v = btoa(usr.value + ':' + pwd.value);
+    if(v === _t) {
+      sessionStorage.setItem('_auth_t', _t);
+      document.getElementById('login-overlay').remove();
+      document.body.style.overflow = '';
+    } else {
+      err.style.display = 'block';
+      pwd.value = '';
+    }
+  };
+  
+  btn.onclick = auth;
+  pwd.onkeydown = (e) => { if(e.key === 'Enter') auth(); };
+})();
+</script>
+
+
+<header class="hero">
+  <div class="hero-in">
+    <div class="badge-hero">Tablero de Análisis · Sep 2026</div>
+    <h1>Bodegas Mendoza<br>Análisis de Mercado</h1>
+    <p class="hero-sub">357 bodegas mendocinas analizadas · Distribución territorial, tech stack, volumen productivo y presencia digital.</p>
+    <div class="trends">
+      <div class="tlabel">Contexto de Mercado</div>
+      <div class="tgrid">
+        <div class="tcard">
+          <div class="ti">📈</div>
+          <div class="tv">+34%</div>
+          <div class="tt">E-commerce vitivinícola global</div>
+          <div class="tx">El canal online creció un 34% interanual. Mendoza lidera en Latinoamérica con el mayor índice de digitalización entre bodegas premium.</div>
+        </div>
+        <div class="tcard">
+          <div class="ti">🌐</div>
+          <div class="tv">47%</div>
+          <div class="tt">Bodegas con tienda propia</div>
+          <div class="tx">Menos de la mitad de las bodegas mendocinas tiene un canal de venta online propio activo, revelando una brecha de oportunidad significativa.</div>
+        </div>
+        <div class="tcard">
+          <div class="ti">🚀</div>
+          <div class="tv">DTC</div>
+          <div class="tt">Tendencia global dominante</div>
+          <div class="tx">El modelo Direct-to-Consumer se consolida globalmente: márgenes más altos, datos de cliente propios y fidelización directa son el nuevo estándar.</div>
+        </div>
+      </div>
+      <button class="cta" onclick="document.getElementById('mkt-modal').classList.add('open')">Ver contexto completo de mercado&nbsp;</button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- KPIs -->
+  <div class="stats">
+    <div class="sc"><div class="sl">Total Bodegas</div><div class="sv" id="kp-total">357</div><div class="ss">en el dataset</div></div>
+    <div class="sc"><div class="sl">Con Tienda Online</div><div class="sv" id="kp-tienda" style="color:var(--a3)">—</div><div class="ss" id="kp-tienda-s">—</div></div>
+    <div class="sc"><div class="sl">Exportan +50%</div><div class="sv" id="kp-exp" style="color:var(--a4)">—</div><div class="ss">alto perfil exportador</div></div>
+    <div class="sc"><div class="sl">Vol. Total Est.</div><div class="sv" id="kp-vol" style="color:var(--a5)">—</div><div class="ss">millones de litros/año</div></div>
+    <div class="sc"><div class="sl">Zonas Geog.</div><div class="sv" id="kp-zonas" style="color:var(--a1)">—</div><div class="ss">zonas unificadas</div></div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="stitle">Distribución por Tamaño y Mercado</div>
+  <div class="cgrid cr3">
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Bodegas por Tamaño</div>
+      <div class="cs" style="margin-bottom:0;">Segmentación del universo analizado por volumen y alcance</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-tam" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-tam" height="260"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Distribución por Tamaño</div>
+      <div class="cs" style="margin-bottom:0;">Proporción relativa (Torta)</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-tam-pie" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw cw-center"><canvas id="ch-tam-pie" style="max-width:300px;max-height:300px;"></canvas></div></div>
+
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Mercado Objetivo (B2B)</div>
+      <div class="cs" style="margin-bottom:0;">Estrategia comercial dominante declarada</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-b2b" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-b2b" height="260"></canvas></div></div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="stitle">Presencia Digital y Tech Stack</div>
+  <div class="cgrid cr3">
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Plataformas de E-commerce</div>
+      <div class="cs" style="margin-bottom:0;">Distribución entre bodegas con tienda online activa</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-tech" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-tech" height="300"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Sitio Web: Adopción</div>
+      <div class="cs" style="margin-bottom:0;">Presencia digital institucional base</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-web" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw cw-center"><canvas id="ch-web" style="max-width:300px;max-height:300px;"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Tienda Online: Adopción</div>
+      <div class="cs" style="margin-bottom:0;">Canal de venta digital directo habilitado</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-tda" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw cw-center"><canvas id="ch-tda" style="max-width:300px;max-height:300px;"></canvas></div></div>
+  </div>
+
+  <!-- CHARTS ROW 3 -->
+  <div class="stitle">Territorio, Grupos y Exportación</div>
+  <div class="cgrid cr3">
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Top Zonas por Cantidad</div>
+      <div class="cs" style="margin-bottom:0;">Zonas unificadas con más bodegas</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-zona" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-zona" height="300"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Estructura Empresarial</div>
+      <div class="cs" style="margin-bottom:0;">Independientes vs grupos corporativos</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-grp" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw cw-center"><canvas id="ch-grp" style="max-width:280px;max-height:280px;"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Tramos de Exportación</div>
+      <div class="cs" style="margin-bottom:0;">% de volumen exportado por rango</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-exp" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-exp" height="300"></canvas></div></div>
+  </div>
+
+  <!-- CHARTS ROW 4 -->
+  <div class="stitle">Mercado Principal y Volumen</div>
+  <div class="cgrid cr2">
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Mercado Fuerte Declarado</div>
+      <div class="cs" style="margin-bottom:0;">Destino principal: Mendoza / Argentina / Exterior</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-mf" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw cw-center"><canvas id="ch-mf" style="max-width:320px;max-height:320px;"></canvas></div></div>
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Volumen Promedio por Tamaño</div>
+      <div class="cs" style="margin-bottom:0;">Litros anuales estimados promedio según segmento</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-vol" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-vol" height="260"></canvas></div></div>
+  </div>
+
+  <!-- CHARTS ROW 5 -->
+  <div class="stitle">Análisis Cruzado: Tech Stack por Segmento</div>
+  <div class="cgrid cr1">
+    <div class="cc">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+    <div style="padding-right:12px;">
+      <div class="ct" style="margin-bottom:2px;">Plataforma Digital por Tamaño de Bodega</div>
+      <div class="cs" style="margin-bottom:0;">Qué tech stack utiliza cada segmento (solo bodegas con tienda online)</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-top:2px;">
+      <span id="meta-ch-cross" style="font-size:11px; font-weight:700; color:var(--a1); background:rgba(168,113,255,0.1); padding:2px 8px; border-radius:100px; white-space:nowrap;"></span>
+      <button onclick="resetFilters()" title="Restablecer filtros globales" style="background:none; border:none; cursor:pointer; color:var(--ts); opacity:0.6; transition:opacity 0.2s; padding:4px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.opacity=1; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.opacity=0.6; this.style.background='none'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="cw"><canvas id="ch-cross" height="200"></canvas></div></div>
+  </div>
+
+  <div class="cgrid cr1" style="margin-top: 24px;">
+    <div class="cc">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+        <div style="padding-right:12px;">
+          <div class="ct" style="margin-bottom:2px;">Distribución de Planes E-commerce</div>
+          <div class="cs" style="margin-bottom:0;">Planes contratados detectados para Shopify y Tiendanube</div>
+        </div>
+      </div>
+      <div class="tabs" style="display:flex; gap:16px; margin-bottom: 16px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+        <button id="btn-tab-sh" onclick="switchTab('sh')" style="background:none; border:none; color:var(--a1); font-weight:700; font-size:14px; cursor:pointer;">Shopify</button>
+        <button id="btn-tab-tn" onclick="switchTab('tn')" style="background:none; border:none; color:var(--ts); font-weight:600; font-size:14px; cursor:pointer;">Tiendanube</button>
+      </div>
+      <div id="tab-sh" class="cw cw-center" style="display:flex; flex-direction:column; align-items:center;">
+        <div style="color:var(--ts); font-size:13px; margin-bottom:12px;" id="meta-ch-plan-sh"></div>
+        <canvas id="ch-plan-sh" style="max-width:300px;max-height:300px;"></canvas>
+      </div>
+      <div id="tab-tn" class="cw cw-center" style="display:none; flex-direction:column; align-items:center;">
+        <div style="color:var(--ts); font-size:13px; margin-bottom:12px;" id="meta-ch-plan-tn"></div>
+        <canvas id="ch-plan-tn" style="max-width:300px;max-height:300px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- NESTED DONUT -->
+  <div class="stitle">Visión Global: Distribución Digital</div>
+  <div class="cgrid cr1" style="margin-bottom: 40px;">
+    <div class="cc">
+      <div class="ct" style="display:flex; justify-content:space-between; align-items:center;">Composición del Mercado Digital <button class="cta" style="margin-top:0; padding:6px 14px; font-size:11px;" onclick="document.getElementById('funnel-modal').classList.add('open')">Ver detalles</button></div>
+      <div class="cs">Anillos concéntricos: Interior (Web) → Medio (Tienda) → Exterior (Plataforma)</div>
+      <div class="cw cw-center"><canvas id="ch-nested" style="max-width:500px;max-height:500px;"></canvas></div>
+    </div>
+  </div>
+
+  
+  <!-- B2B ANALYTICS -->
+  <div class="stitle" style="display:flex; justify-content:space-between; align-items:center;">
+    <span>Analítica de Prospección B2B</span>
+    <button class="cta" style="margin:0; padding:8px 16px; font-size:12px; display:flex; align-items:center; gap:6px;" onclick="openEditor()">
+      ⚙️ Ajustar Motor de Scoring
+    </button>
+  </div>
+  <div class="cgrid cr3">
+    <div class="cc">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+        <div style="padding-right:12px;">
+          <div class="ct" style="margin-bottom:2px;">Distribución de Tiers</div>
+          <div class="cs" style="margin-bottom:0;">Calificación de prospectos en el embudo</div>
+        </div>
+      </div>
+      <div class="cw cw-center"><canvas id="ch-tiers" style="max-width:300px;max-height:300px;"></canvas></div>
+    </div>
+    
+    <div class="cc">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+        <div style="padding-right:12px;">
+          <div class="ct" style="margin-bottom:2px;">Prioridad de Acción</div>
+          <div class="cs" style="margin-bottom:0;">Oportunidades Inmediatas vs Nurturing</div>
+        </div>
+      </div>
+      <div class="cw cw-center"><canvas id="ch-opps" style="max-width:300px;max-height:300px;"></canvas></div>
+    </div>
+    
+    <div class="cc">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+        <div style="padding-right:12px;">
+          <div class="ct" style="margin-bottom:2px;">Scoring Promedio por Zona</div>
+          <div class="cs" style="margin-bottom:0;">Top 5 zonas unificadas más calientes (promedio de score)</div>
+        </div>
+      </div>
+      <div class="cw"><canvas id="ch-score-zona" height="240"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="tsec">
+    <div class="stitle">Listado Completo de Bodegas</div>
+  <!-- FILTERS -->
+  <div class="fbar">
+    <div class="fg"><label>Zona</label><select id="f-zona" onchange="applyFilters()"><option value="">Todas</option></select></div>
+    <div class="fg"><label>Tamaño</label>
+      <select id="f-tam" onchange="applyFilters()">
+        <option value="">Todos</option>
+        <option>Proyecto</option><option>Boutique</option><option>Mediana</option><option>Grande</option><option>Desconocido</option>
+      </select>
+    </div>
+    <div class="fg"><label>Mercado</label>
+      <select id="f-merc" onchange="applyFilters()">
+        <option value="">Todos</option>
+        <option value="DTC">DTC (directo)</option>
+        <option value="Reg">Regional</option>
+        <option value="Nac">Nacional</option>
+        <option value="Intl">Internacional</option>
+        <option value="Bout">Boutique Export</option>
+      </select>
+    </div>
+    <div class="fg"><label>Plan E-comm</label><select id="f-plan" onchange="applyFilters()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Sitio Web</label><select id="f-web" onchange="applyFilters()"><option value="">Todas</option><option value="si">Con web</option><option value="no">Sin web</option></select></div>
+    <div class="fg"><label>Plataforma</label><select id="f-tech" onchange="applyFilters()"><option value="">Todas</option></select></div>
+    <div class="fg"><label>Tienda Online</label>
+      <select id="f-tda" onchange="applyFilters()">
+        <option value="">Todas</option>
+        <option value="si">Con tienda</option>
+        <option value="no">Sin tienda</option>
+      </select>
+    </div>
+    <div class="fg"><label>Grupo</label><select id="f-grp" onchange="applyFilters()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Tier</label><select id="f-tier" onchange="applyFilters()"><option value="">Todos</option><option value="Tier 1">Tier 1</option><option value="Tier 2">Tier 2</option><option value="Tier 3">Tier 3</option><option value="Tier 4">Tier 4</option></select></div>
+    <div class="fg"><label>Prioridad</label><select id="f-prioridad" onchange="applyFilters()"><option value="">Todas</option><option value="Inmediata">Inmediata</option><option value="Corto Plazo">Corto Plazo</option><option value="Mediano Plazo">Mediano Plazo</option><option value="Nurturing">Nurturing</option></select></div>
+    <div class="fg"><label>Score Min</label><input type="number" id="f-scoremin" placeholder="0" style="background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); padding:6px; border-radius:4px; color:var(--tx); width:60px; font-size:12px;" oninput="applyFilters()"></div>
+    <button class="breset" onclick="resetFilters()">✕ Limpiar</button>
+    <div class="finfo"><span class="fcount" id="fcount">357</span> bodegas</div>
+  </div>
+
+
+    <div class="tctrl">
+
+      <div class="swrap"><input type="text" id="tsearch" placeholder="Buscar bodega, zona, tech stack, grupo..." oninput="renderTable()"></div>
+      <select class="psel" id="psize" onchange="curPage=1;renderTable()">
+        <option value="20">20 por página</option>
+        <option value="50">50 por página</option>
+        <option value="100">100 por página</option>
+      </select>
+      <button class="expbtn" onclick="exportCSV()">⬇ Exportar CSV</button>
+    </div>
+
+    <div id="active-filters-bar" style="display:none; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; background:rgba(255,255,255,0.02); padding:12px 16px; border-radius:12px; border:1px solid var(--border);">
+      <div id="filter-chips" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+      <div style="color:var(--ts); font-size:13px; font-weight:600; margin-left:auto;"><span id="chip-count" style="color:var(--a1);"></span> de 357</div>
+      <button class="breset" style="padding:6px 12px; font-size:12px;" onclick="resetFilters()">✕ Restablecer filtros</button>
+    </div>
+
+    <div class="twrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortBy('score')" id="th-sco">Score / Tier</th>
+            <th onclick="sortBy('nombre')" id="th-nombre">Nombre</th>
+            <th onclick="sortBy('zonaUnif')" id="th-zona">Zona</th>
+            <th onclick="sortBy('tamano')" id="th-tam">Tamaño</th>
+            <th onclick="sortBy('web')" id="th-web">Web</th>
+            <th onclick="sortBy('tieneTienda')" id="th-tda">Tienda</th>
+            <th onclick="sortBy('techStack')" id="th-tech">Tech Stack</th>
+            <th onclick="sortBy('exportPct')" id="th-exp">Export %</th>
+            <th onclick="sortBy('vol')" id="th-vol">Vol. (L)</th>
+            <th onclick="sortBy('grupo')" id="th-grp">Grupo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pag">
+      <div class="pinfo" id="pinfo"></div>
+      <div class="pbtns" id="pbtns"></div>
+    </div>
+  </div>
+</main>
+
+
+<!-- FUNNEL MODAL -->
+<div class="mover" id="funnel-modal">
+  <div class="modal" style="max-width: 900px;">
+    <button class="mclose" onclick="document.getElementById('funnel-modal').classList.remove('open')">×</button>
+  <!-- FUNNEL: Web > Tienda > Stack -->
+  <div class="funnel-section">
+    <div class="stitle">Embudo Digital: Web → Tienda → Plataforma</div>
+    <p style="font-size:13px;color:var(--ts);margin-bottom:24px;max-width:800px;">Cada círculo muestra el universo del nivel anterior. Los porcentajes indican <strong style="color:var(--a3)">% del propio grupo</strong> y <strong style="color:var(--ts)">% del total (357 bodegas)</strong>.</p>
+    <div class="funnel-wrap" id="funnel-wrap">
+      <!-- Col 1: Con web / Sin web -->
+      <div class="fnl-col">
+        <div class="fnl-card">
+          <div class="fnl-title">① Presencia Web</div>
+          <div class="fnl-sub">Del universo total de 357 bodegas</div>
+          <div class="fnl-total-badge">Total analizado: <strong id="f1-total">357</strong></div>
+          <canvas id="ch-f1" height="220"></canvas>
+          <div class="fnl-legend" id="leg-f1"></div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div class="connector">
+        <svg width="40" height="40" viewBox="0 0 40 40"><path d="M8 20h24M24 12l8 8-8 8" stroke="#a871ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <!-- Col 2: Con tienda / Sin tienda (de las que tienen web) -->
+      <div class="fnl-col">
+        <div class="fnl-card">
+          <div class="fnl-title">② Tienda Online</div>
+          <div class="fnl-sub">De las bodegas <em>con sitio web</em></div>
+          <div class="fnl-total-badge">Base: <strong id="f2-total">—</strong> con web</div>
+          <canvas id="ch-f2" height="220"></canvas>
+          <div class="fnl-legend" id="leg-f2"></div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div class="connector">
+        <svg width="40" height="40" viewBox="0 0 40 40"><path d="M8 20h24M24 12l8 8-8 8" stroke="#43e97b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <!-- Col 3: Plataformas (de las que tienen tienda) -->
+      <div class="fnl-col">
+        <div class="fnl-card">
+          <div class="fnl-title">③ Plataforma E-commerce</div>
+          <div class="fnl-sub">De las bodegas <em>con tienda online activa</em></div>
+          <div class="fnl-total-badge">Base: <strong id="f3-total">—</strong> con tienda</div>
+          <canvas id="ch-f3" height="220"></canvas>
+          <div class="fnl-legend" id="leg-f3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+</div>
+
+
+<!-- SCORING EDITOR MODAL -->
+<div class="mover" id="scoring-modal">
+  <div class="modal" style="width: 90%; max-width: 700px; padding:32px;">
+    <button class="mclose" onclick="document.getElementById('scoring-modal').classList.remove('open')">×</button>
+    <h2 style="margin-bottom:8px;">Ajustar Motor de Scoring</h2>
+    <div class="cs" style="margin-bottom:24px;">Modificá los pesos del algoritmo. Los puntajes y tiers se recalcularán en vivo para toda la base de datos.</div>
+
+    <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:24px;">
+      <h3 style="font-size:13px; color:var(--a1); margin-bottom:12px; text-transform:uppercase;">ℹ️ Cómo funciona la asignación de Tiers</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="background:#ffcd47; color:#000; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;">TIER 1</span>
+            <span style="font-size:12px; color:var(--tx); font-weight:600;">+70 pts (Inmediata)</span>
+          </div>
+          <div style="font-size:11px; color:var(--ts); line-height:1.4;">Bodegas con alto volumen de litros que ya sufren dolores tecnológicos graves o financieros (ideal para el pitch del Colapso).</div>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="background:#38a9f5; color:#000; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;">TIER 2</span>
+            <span style="font-size:12px; color:var(--tx); font-weight:600;">40 a 69 pts (Corto Plazo)</span>
+          </div>
+          <div style="font-size:11px; color:var(--ts); line-height:1.4;">Excelentes prospectos, generalmente medianas o boutique con D2C validado o proyectos Greenfield sin tienda.</div>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="background:#a871ff; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;">TIER 3</span>
+            <span style="font-size:12px; color:var(--tx); font-weight:600;">15 a 39 pts (Mediano Plazo)</span>
+          </div>
+          <div style="font-size:11px; color:var(--ts); line-height:1.4;">Tienen cierta agilidad de decisión pero carecen de dolores urgentes. Requieren trabajo de seguimiento continuo.</div>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="background:#8b95b0; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;">TIER 4</span>
+            <span style="font-size:12px; color:var(--tx); font-weight:600;">Menos de 15 pts (Nurturing)</span>
+          </div>
+          <div style="font-size:11px; color:var(--ts); line-height:1.4;">Bodegas de perfil corporativo o proyectos muy incipientes sin foco digital. No ameritan esfuerzo comercial activo hoy.</div>
+        </div>
+      </div>
+      <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05); font-size:11px; color:var(--ts);">
+        El puntaje máximo teórico es <strong>100 pts</strong> (30 Vol + 20 Agilidad + 10 Mdo. Fuerte + 40 Dolor).
+      </div>
+    </div>
+
+    
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:8px; border:1px solid var(--border);">
+        <label style="font-size:12px; color:var(--tm); text-transform:uppercase; font-weight:700; display:block; margin-bottom:12px;">Puntos Máximos por Dolor Tecnológico</label>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--ts);">El Colapso (Woo/TN en Med/Gde)</span>
+          <input type="number" id="sc-colapso" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="40">
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--ts);">Dolor Financiero (Shopify/VTEX Local)</span>
+          <input type="number" id="sc-financiero" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="35">
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--ts);">Greenfield Estratégico (Sin Tienda Med/Gde)</span>
+          <input type="number" id="sc-greenfield" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="25">
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ts);">D2C Validado (Woo/TN en Boutique/Proyecto)</span>
+          <input type="number" id="sc-d2c" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="15">
+        </div>
+      </div>
+      
+      <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:8px; border:1px solid var(--border);">
+        <label style="font-size:12px; color:var(--tm); text-transform:uppercase; font-weight:700; display:block; margin-bottom:12px;">Puntos por Volumen & Agilidad</label>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--ts);">Tamaño Grande</span>
+          <input type="number" id="sc-vol-gde" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="30">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--ts);">Tamaño Mediana</span>
+          <input type="number" id="sc-vol-med" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="20">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ts);">Agilidad (Decisión Independiente)</span>
+          <input type="number" id="sc-agilidad" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--tx); padding:4px 8px; border-radius:4px;" value="20">
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+      <button class="cta" style="margin:0;" onclick="saveAndRecalculate()">Recalcular Algoritmo</button>
+    </div>
+  </div>
+</div>
+
+<!-- BODEGA MODAL -->
+<div class="mover" id="bodega-modal">
+  <div class="modal" style="width: 90%; max-width: 1000px; max-height: 90vh; overflow-y: auto; padding: 32px;">
+    <button class="mclose" onclick="document.getElementById('bodega-modal').classList.remove('open')">×</button>
+    <div id="bodega-modal-content"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mover" id="mkt-modal">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('mkt-modal').classList.remove('open')">×</button>
+    <h2>📊 Contexto de Mercado: Vino Online en Mendoza y el Mundo</h2>
+    <div class="mstats">
+      <div class="msi"><div class="v">$9B</div><div class="l">Mercado global vino online 2025</div></div>
+      <div class="msi"><div class="v">+34%</div><div class="l">Crecimiento anual e-commerce vitivinícola</div></div>
+      <div class="msi"><div class="v">47%</div><div class="l">Bodegas Mza con tienda propia</div></div>
+      <div class="msi"><div class="v">DTC</div><div class="l">Modelo dominante en Europa y EEUU</div></div>
+    </div>
+    <p><strong>🌍 Tendencias globales:</strong> El e-commerce de vinos superó los USD 9.000 millones en 2025 y proyecta USD 14.000 millones para 2028. El canal digital pasó de ser complementario a estratégico. Las bodegas que dominan el canal DTC reportan márgenes hasta un 40% superiores frente a la distribución tradicional.</p>
+    <p><strong>🇦🇷 Contexto Mendoza:</strong> Mendoza concentra el 85% de la producción vitivinícola argentina. Sin embargo, solo el 47% de las bodegas relevadas tiene tienda online activa, y menos del 30% usa una plataforma dedicada (Shopify, WooCommerce, Tiendanube). La brecha digital es la principal oportunidad del mercado local.</p>
+    <p><strong>📱 Mobile first:</strong> Más del 68% de las compras de vino online globales se inician desde dispositivos móviles. El tiempo promedio de decisión de compra online cayó a 4 minutos. Las bodegas con sitios no optimizados pierden conversiones críticas.</p>
+    <p><strong>🔑 Factores clave para 2026:</strong> Experiencia de usuario premium, integración con redes sociales, wine clubs (suscripciones) y logística de última milla. Las bodegas boutique y medianas son las que más pueden crecer con personalización digital.</p>
+    <p><strong>💡 Oportunidad identificada:</strong> De las 357 bodegas analizadas, ~189 no tienen canal de venta digital propio. Eso representa más del 50% del universo y un potencial sin explotar de cientos de millones de pesos en ventas directas.</p>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const DATA = [
+  {id:'1',nombre:'4 Gatos Locos',zonaUnif:'Tupungato',zona:'Gualtallary',web:'4gatoslocos.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:18000,tamano:'Proyecto',lineas:1},
+  {id:'2',nombre:'A16',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'a16sa.com',tienda:'a16sa.com/tienda-a16',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'3',nombre:'Abito Wines',zonaUnif:'Maipú',zona:'Barrancas',web:'abitowines.com',tienda:'gruposalute.com',tieneTienda:true,techStack:'WixCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'4',nombre:'ABRAHAM CURA BADIN SA',zonaUnif:'Maipú',zona:'Fray Luis Beltrán',web:'abrahamwines.com/es/home-es/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'5',nombre:'Abremundos',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'abremundos.com.ar',tienda:'abremundos.com.ar',tieneTienda:true,techStack:'Jumpseller',grupo:'Indep.',mercFuerte:'Mza',exportPct:10,b2b:'Bout',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'6',nombre:'Achaval-Ferrer',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'achaval-ferrer.com',tienda:'tienda.achaval-ferrer.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:4},
+  {id:'7',nombre:'Alandes de Karim Mussi',zonaUnif:'San Carlos',zona:'La Consulta',web:'karimmussi.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:35,b2b:'Bout',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'8',nombre:'Alba en los Andes',zonaUnif:'Tupungato',zona:'Gualtallary',web:'albaenlosandes.com',tienda:'albaenlosandes.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:75000,tamano:'Boutique',lineas:2},
+  {id:'9',nombre:'Albaflor (Altos de Altamira)',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'albaflor.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:15000,tamano:'Proyecto',lineas:1},
+  {id:'10',nombre:'Alfredo Roca',zonaUnif:'San Rafael',zona:'Cañada Seca',web:'rocawines.com/es',tienda:'tienda-rocawines.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'11',nombre:'ALGARROBO WINES S.A.',zonaUnif:'Junín',zona:'Los Barriales',web:'algarrobowines.com/',tienda:'algarrobowines.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:3500000,tamano:'Grande',lineas:8},
+  {id:'12',nombre:'Algodon Wine Estates',zonaUnif:'San Rafael',zona:'Cuadro Benegas',web:'algodonwines.com.ar',tienda:'algodonwines.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Bout',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'13',nombre:'Alpamanta',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'alpamanta.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:200000,tamano:'Boutique',lineas:4},
+  {id:'14',nombre:'Alpasión',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'alpasion.com',tienda:'shop.alpasion.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'15',nombre:'Alta Vista',zonaUnif:'Luján de Cuyo',zona:'Chacras de Coria',web:'altavistawines.com',tienda:'tienda.altavistawines.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:2100000,tamano:'Grande',lineas:7},
+  {id:'16',nombre:'Alta Yarí',zonaUnif:'Tupungato',zona:'Gualtallary',web:'bodegaaltayari.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'17',nombre:'Altar Uco',zonaUnif:'Tupungato',zona:'Gualtallary',web:'altaruco.com/',tienda:'altaruco.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:30000,tamano:'Proyecto',lineas:2},
+  {id:'18',nombre:'Alto Limay',zonaUnif:'San Rafael',zona:'Las Paredes',web:'altolimaywines.com.ar',tienda:'bodegasecreto.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:85000,tamano:'Boutique',lineas:2},
+  {id:'19',nombre:'Alto Salvador',zonaUnif:'San Martín',zona:'Alto Salvador',web:'altosalvador.com',tienda:'tiendaaltoslashormigas.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:5},
+  {id:'20',nombre:'Altos Las Hormigas',zonaUnif:'Luján de Cuyo',zona:'El Carrizal',web:'altoslashormigas.com',tienda:'tiendaaltoslashormigas.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:5},
+  {id:'21',nombre:'AMADEO MARAÑON S.A.',zonaUnif:'Tupungato',zona:'San José',web:'bodegasmaranon.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:5000000,tamano:'Grande',lineas:10},
+  {id:'22',nombre:'Ambrosía',zonaUnif:'Tupungato',zona:'Gualtallary',web:'fincaambrosia.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:140000,tamano:'Boutique',lineas:3},
+  {id:'23',nombre:'Anaia',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'anaiawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'24',nombre:'Andeluna Cellars',zonaUnif:'Tupungato',zona:'Gualtallary',web:'andeluna.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'25',nombre:'Antigal',zonaUnif:'Maipú',zona:'Russell',web:'antigal.com',tienda:'tienda.antigal.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:3000000,tamano:'Grande',lineas:8},
+  {id:'26',nombre:'Antucura',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'antucura.com',tienda:'antucura.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:220000,tamano:'Boutique',lineas:4},
+  {id:'27',nombre:'Araujo',zonaUnif:'San Rafael',zona:'Villa Atuel',web:'bodegaaraujo.com.ar',tienda:'bodegaaraujo.com.ar/productos',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'28',nombre:'Argana',zonaUnif:'San Rafael',zona:'Atuel Norte',web:'arganawines.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:12000,tamano:'Proyecto',lineas:1},
+  {id:'29',nombre:'Argento',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bodegaargento.com',tienda:'tienda.grupoavinea.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Avinea',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:8000000,tamano:'Grande',lineas:12},
+  {id:'30',nombre:'Atamisque',zonaUnif:'Tupungato',zona:'San José',web:'bodegaatamisque.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:650000,tamano:'Mediana',lineas:5},
+  {id:'31',nombre:'Atilio Avena',zonaUnif:'Tunuyán',zona:'Villa Seca',web:'atilioavena.com',tienda:'bodegaatilioavena.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'32',nombre:'Bandini (Finca Bandini)',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'fincabandini.com',tienda:'fincabandini.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza/Arg',exportPct:5,b2b:'DTC',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'33',nombre:'Barberis (Bodega Barberis)',zonaUnif:'Guaymallén',zona:'El Sauce',web:'bodegabarberis.com',tienda:'pedix.app/bodega-barberis',tieneTienda:true,techStack:'Pedix',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1100000,tamano:'Mediana',lineas:6},
+  {id:'34',nombre:'BARRY WAYNE MORGAN (Familia Morgan)',zonaUnif:'San Rafael',zona:'Las Paredes',web:'familiamorgan.wine',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'35',nombre:'Bataraz',zonaUnif:'Maipú',zona:'Lunlunta',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:10000,tamano:'Proyecto',lineas:1},
+  {id:'36',nombre:'Baudron',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bodegasbaudron.com',tienda:'tienda.bodegasbaudron.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1500000,tamano:'Mediana',lineas:7},
+  {id:'37',nombre:'Belasco de Baquedano',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'belascodebaquedano.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Gpo. Belasce',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:800000,tamano:'Mediana',lineas:4},
+  {id:'38',nombre:'Belhara Estate',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'belharaestate.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'39',nombre:'Bemberg (Bemberg Estate Wines) - Grupo Peñaflor',zonaUnif:'Tunuyán',zona:'Gualtallary',web:'bembergestatewines.com',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Ext',exportPct:70,b2b:'Bout',vol:85000,tamano:'Boutique',lineas:3},
+  {id:'40',nombre:'Benegas',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'benegaswinery.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:35,b2b:'Intl',vol:500000,tamano:'Mediana',lineas:5},
+  {id:'41',nombre:'Bermejo State',zonaUnif:'Bermejo',zona:'Bermejo',web:'bermejostate.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:20000,tamano:'Proyecto',lineas:2},
+  {id:'42',nombre:'BERRUTI Y CHINI S.A.',zonaUnif:'San Martín',zona:'Chapanay',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:4000000,tamano:'Grande',lineas:7},
+  {id:'43',nombre:'Beth (Finca Beth)',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:18000,tamano:'Proyecto',lineas:1},
+  {id:'44',nombre:'Bianchi (Bodegas Bianchi)',zonaUnif:'San Rafael',zona:'Alto Las Paredes',web:'bodegasbianchi.com.ar',tienda:'bodegasbianchi.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:13000000,tamano:'Grande',lineas:15},
+  {id:'45',nombre:'Bira Wines',zonaUnif:'Tupungato',zona:'La Arboleda',web:'birawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:40000,tamano:'Proyecto',lineas:2},
+  {id:'46',nombre:'Bizzotto Family Wines',zonaUnif:'Tupungato',zona:'Gualtallary',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:15000,tamano:'Proyecto',lineas:1},
+  {id:'47',nombre:'Blanchard & Lurton',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'blanchardylurton.com',tienda:'blanchardylurton.com/collections/all',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:35,b2b:'Bout',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'48',nombre:'Bocanada Wines',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'bocanadawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:12000,tamano:'Proyecto',lineas:1},
+  {id:'49',nombre:'Bombal',zonaUnif:'Maipú',zona:'Lunlunta',web:'bodegabombal.com',tienda:'bodegabombal.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:200000,tamano:'Boutique',lineas:4},
+  {id:'50',nombre:'Bonfanti',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'vinosbonfanti.com.ar',tienda:'https://www.vinosbonfanti.com.ar/tienda/',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:110000,tamano:'Boutique',lineas:3},
+  {id:'51',nombre:'Bournett - Dijon',zonaUnif:'San Rafael',zona:'Cuadro Nacional',web:'bournett.com.ar',tienda:'bournett.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'52',nombre:'Boutique Chayee Bourras',zonaUnif:'San Rafael',zona:'Cuadro Benegas',web:'bodegabourras.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'Reg',vol:50000,tamano:'Boutique',lineas:2},
+  {id:'53',nombre:'Bressia',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bressiabodega.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:5},
+  {id:'54',nombre:'BRUJERIAS WINE ESTATE SA.',zonaUnif:'San Rafael',zona:'Cañada Seca',web:'bodegabrujerias.com/',tienda:'bodegabrujerias.com/nuestros-vinos-2',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:80000,tamano:'Boutique',lineas:3},
+  {id:'55',nombre:'Budeguer',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'budeguer.com',tienda:'tienda.bodegabudeguer.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'56',nombre:'Buono B',zonaUnif:'San Martín',zona:'San Martín',web:'buonob.com.ar/wp/',tienda:'buonob.com.ar/wp/index.php/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:20000,tamano:'Proyecto',lineas:2},
+  {id:'57',nombre:'Cabrini',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'cabrini.com.ar',tienda:'tienda.cabrini.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:850000,tamano:'Mediana',lineas:6},
+  {id:'58',nombre:'Cadus Wines - Grupo Peñaflor',zonaUnif:'Luján de Cuyo',zona:'Carrodilla',web:'caduswines.com',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'59',nombre:'Caelum',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bodegacaelum.com.ar',tienda:'bodegacaelum.com.ar/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'60',nombre:'CALLE',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'bodegacalle.com/sp/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'61',nombre:'Callejón del Crimen',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'callejondelcrimen.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:900000,tamano:'Mediana',lineas:6},
+  {id:'62',nombre:'Cánepa Martin',zonaUnif:'Luján de Cuyo',zona:'Chacras de Coria',web:'canepamartin.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'63',nombre:'Canteros Wines',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'canteroswines.com',tienda:'tienda.canteroswines.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:30000,tamano:'Proyecto',lineas:2},
+  {id:'64',nombre:'Carelli',zonaUnif:'Rivadavia',zona:'Reducción',web:'bodegacarelli.com.ar',tienda:'bodegacarelli.com.ar/tienda-2/',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'65',nombre:'CarinaE Viñedos & Bodega',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'66',nombre:'Carmelo Patti (El Lagar)',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'bodegacarmelopatti.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Reg',vol:80000,tamano:'Boutique',lineas:2},
+  {id:'67',nombre:'Carmine Granata',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bgacarminegranata.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:80000,tamano:'Boutique',lineas:2},
+  {id:'68',nombre:'Caro',zonaUnif:'Godoy Cruz',zona:'Godoy Cruz',web:'https://www.lafite.com/es/domaines/bodegas-caro-es/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'LVMH',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'69',nombre:'CARUSO HNOS',zonaUnif:'Rivadavia',zona:'Los Árboles',web:'familiacaruso.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'70',nombre:'Casa de Uco Vineyards',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'casadeuco.com',tienda:'casadeuco.com/tienda-online',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'71',nombre:'Casa Vigil (El Enemigo)',zonaUnif:'Maipú',zona:'Chachingo',web:'enemigowines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:150000,tamano:'Boutique',lineas:4},
+  {id:'72',nombre:'Casarena',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'casarena.com',tienda:'Custom',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'73',nombre:'CASIR DOS SANTOS S.R.L.',zonaUnif:'Maipú',zona:'Fray Luis Beltrán',web:'bodegacasirdossantos.com/es/home-esp/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'74',nombre:'Catena Zapata',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'catenazapata.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Catena Fam.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'75',nombre:'CAVAS LA CAPILLA',zonaUnif:'Maipú',zona:'Santa Blanca',web:'cavaslacapilla.com/',tienda:'https://cavaslacapilla.com/tienda/',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:10500000,tamano:'Grande',lineas:12},
+  {id:'76',nombre:'Chaglasian',zonaUnif:'San Rafael',zona:'Las Paredes',web:'chaglasianwinery.com',tienda:'chaglasianwinery.com/tienda',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'77',nombre:'Chakana Wines',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'chakanawines.com',tienda:'chakanawines.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Gpo. Avinea',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'78',nombre:'Chandon',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'chandon.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'LVMH',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'79',nombre:'Cheval Des Andes',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'chevaldesandes.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'LVMH',mercFuerte:'Ext',exportPct:80,b2b:'Intl',vol:80000,tamano:'Boutique',lineas:8},
+  {id:'80',nombre:'Cicchitti',zonaUnif:'Guaymallén',zona:'Rodeo de la Cruz',web:'bodegacicchitti.com/',tienda:'bodegacicchitti.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:2},
+  {id:'81',nombre:'Cielo y Tierra',zonaUnif:'Maipú',zona:'Lunlunta',web:'cieloytierrasa.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'82',nombre:'Cimarrón Wines',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'cimarronwinesco.com',tienda:'cimarronwinesco.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'Reg',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'83',nombre:'Cinco Sentidos',zonaUnif:'Maipú',zona:'Russell',web:'cinco-sentidos.com.ar',tienda:'cincosentidos.ar/catalogo',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:40000,tamano:'Proyecto',lineas:2},
+  {id:'84',nombre:'Clément',zonaUnif:'Junín',zona:'Algarrobo Grande',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'85',nombre:'Clop Wines',zonaUnif:'Maipú',zona:'Fray Luis Beltrán',web:'bodegadelosclop.com',tienda:'tienda.clopwines.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'86',nombre:'Clos de Chacras',zonaUnif:'Luján de Cuyo',zona:'Chacras de Coria',web:'closdechacras.com.ar',tienda:'closdechacras.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:900000,tamano:'Mediana',lineas:5},
+  {id:'87',nombre:'Clos De Los Siete',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'closdelossiete.com',tienda:'tienda.closdelossiete.com/',tieneTienda:true,techStack:'Tiendanube',grupo:'C. de los 7',mercFuerte:'Ext',exportPct:80,b2b:'Intl',vol:280000,tamano:'Boutique',lineas:4},
+  {id:'88',nombre:'Club Tapiz - Fincas Patagónicas',zonaUnif:'Maipú',zona:'Russell',web:'tapiz.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fincas Pat.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:2000000,tamano:'Grande',lineas:5},
+  {id:'89',nombre:'Colosso Wines',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'colossowines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'90',nombre:'Conalbi Grinberg',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'conalbigrinberg.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:850000,tamano:'Mediana',lineas:5},
+  {id:'91',nombre:'Corazón del Sol',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'corazondelsol.com',tienda:'corazondelsol.com',tieneTienda:true,techStack:'Commerce7',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'92',nombre:'Corbeau Wines',zonaUnif:'Maipú',zona:'Maipú',web:'corbeauwines.com/',tienda:'corbeau.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:110000,tamano:'Boutique',lineas:3},
+  {id:'93',nombre:'Corvus Wines',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:2200000,tamano:'Grande',lineas:6},
+  {id:'94',nombre:'Cruz de Piedra',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'95',nombre:'Cruzat',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegacruzat.com',tienda:'cruzat.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:35,b2b:'Intl',vol:4500000,tamano:'Grande',lineas:8},
+  {id:'96',nombre:'Cuadro Benegas S.A.',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'fincacuadrobenegas.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'97',nombre:'Cuarto Dominio',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'cuartodominio.com.ar',tienda:'cuartodominio.empretienda.com.ar',tieneTienda:true,techStack:'Empretienda',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:280000,tamano:'Boutique',lineas:3},
+  {id:'98',nombre:'Cundo Altamira',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:15000,tamano:'Proyecto',lineas:1},
+  {id:'99',nombre:'Cuvelier Los Andes',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'cuvelierlosandes.com',tienda:'cuvelierlosandes.com/tienda',tieneTienda:true,techStack:'Custom',grupo:'C. de los 7',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'100',nombre:'Dante Robino',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegadanterobino.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Intl',vol:6500000,tamano:'Grande',lineas:9},
+  {id:'101',nombre:'David Catena Wines',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Catena Fam.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'102',nombre:'De Angeles',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'malbecdeangeles.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Bout',vol:50000,tamano:'Boutique',lineas:2},
+  {id:'103',nombre:'De Moño Rojo',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'bodegasdmr.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:35000,tamano:'Proyecto',lineas:2},
+  {id:'104',nombre:'Decero',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'fincadecero.com/',tienda:'shop.fincadecero.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:500000,tamano:'Mediana',lineas:4},
+  {id:'105',nombre:'del Nunca Jamás',zonaUnif:'Tunuyán',zona:'Tunuyán',web:'postalesarg.com/la-bodega-postales/es/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:18000,tamano:'Proyecto',lineas:1},
+  {id:'106',nombre:'Desquiciado Wines',zonaUnif:'Tupungato',zona:'Gualtallary',web:'desquiciado.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:85000,tamano:'Boutique',lineas:3},
+  {id:'107',nombre:'DiamAndes (Clos de los Siete)',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'diamandes.com/',tienda:'bodegadiamandes.store/',tieneTienda:true,techStack:'Tiendanube',grupo:'C. de los 7',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:650000,tamano:'Mediana',lineas:5},
+  {id:'108',nombre:'Divendres',zonaUnif:'Junín',zona:'Los Barriales',web:'divendres.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1100000,tamano:'Mediana',lineas:5},
+  {id:'109',nombre:'Dolium',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'dolium.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'110',nombre:'Domaine Bousquet',zonaUnif:'Tupungato',zona:'Gualtallary',web:'domainebousquet.com/',tienda:'tienda.domainebousquet.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:75,b2b:'Intl',vol:3500000,tamano:'Grande',lineas:7},
+  {id:'111',nombre:'Domaine Le Billoud',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'domainelebilloud.com/',tienda:'domainelebilloud.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'112',nombre:'Domaine Nico',zonaUnif:'Tupungato',zona:'Gualtallary',web:'domainenico.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Catena Fam.',mercFuerte:'Ext',exportPct:60,b2b:'Bout',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'113',nombre:'Domaine St. Diego',zonaUnif:'Maipú',zona:'Lunlunta',web:'domainestdiego.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'114',nombre:'Domiciano de Barrancas',zonaUnif:'Maipú',zona:'Coquimbito',web:'domiciano.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'115',nombre:'DON ANTOLIN S.R.L.',zonaUnif:'San Martín',zona:'Buen Orden',web:'bodegadonantolin.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:6},
+  {id:'116',nombre:'Don Bosco',zonaUnif:'Maipú',zona:'Maipú',web:'bodegadonbosco.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'117',nombre:'Don Carlos',zonaUnif:'Tupungato',zona:'Tupungato',web:'fincadoncarlos.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'118',nombre:'DON CAYETANO S.A.',zonaUnif:'Rivadavia',zona:'Santa María de Oro',web:'doncayetano.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:5},
+  {id:'119',nombre:'Don Cristóbal',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'doncristobal.com.ar',tienda:'cristobal.com.ar/',tieneTienda:true,techStack:'Magento',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'120',nombre:'DON GERARDO S.A.',zonaUnif:'San Martín',zona:'San Martín',web:'familianavarro.com.ar',tienda:'familianavarro.com.ar/tienda',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:3200000,tamano:'Grande',lineas:7},
+  {id:'121',nombre:'Don Manuel Villafañe',zonaUnif:'Maipú',zona:'El Paraíso',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'122',nombre:'DON OCTAVIO SRL.',zonaUnif:'San Rafael',zona:'Las Paredes',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:280000,tamano:'Boutique',lineas:3},
+  {id:'123',nombre:'Doña Paula',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'donapaula.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:75,b2b:'Intl',vol:5500000,tamano:'Grande',lineas:9},
+  {id:'124',nombre:'Dos Familias',zonaUnif:'Luján de Cuyo',zona:'Carrodilla',web:'bodegadosfamilias.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:80000,tamano:'Boutique',lineas:2},
+  {id:'125',nombre:'Duret',zonaUnif:'San Rafael',zona:'San Rafael',web:'bodegaduret.com',tienda:'bodegaduret.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:40000,tamano:'Proyecto',lineas:2},
+  {id:'126',nombre:'Durigutti Family Winemakers',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'durigutti.com/',tienda:'tienda.durigutti.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'127',nombre:'Eclipse',zonaUnif:'Maipú',zona:'Coquimbito',web:'bodegaeclipse.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:200000,tamano:'Boutique',lineas:3},
+  {id:'128',nombre:'Edelmira',zonaUnif:'San Martín',zona:'San Martín',web:'bodegaedelmira.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:65000,tamano:'Boutique',lineas:2},
+  {id:'129',nombre:'El Bayeh',zonaUnif:'San Martín',zona:'Ingeniero Giagnoni',web:'bodegaelbayeh.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'130',nombre:'El Cerno',zonaUnif:'Maipú',zona:'Maipú',web:'viñaelcerno.com',tienda:'vinaelcerno.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'131',nombre:'El Nevado',zonaUnif:'San Rafael',zona:'Rama Caída',web:'fincaelnevado.com/',tienda:'https://fincaelnevado.com/nuestros-vinos/',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'132',nombre:'El Origen',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'fincaelorigen.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'133',nombre:'El Relator Wines',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'relatorwines.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'134',nombre:'EMILCA S.A.',zonaUnif:'Rivadavia',zona:'La Libertad',web:'emilca.com.ar',tienda:'emilca.com.ar',tieneTienda:true,techStack:'Empretienda',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:2800000,tamano:'Grande',lineas:7},
+  {id:'135',nombre:'Entrometido Wines',zonaUnif:'Tunuyán',zona:'Los Árboles',web:'entrometidowines.com/',tienda:'entrometidowines.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'136',nombre:'Escala Humana Wines',zonaUnif:'Tupungato',zona:'El Zampal',web:'escalahumanawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:40000,tamano:'Proyecto',lineas:2},
+  {id:'137',nombre:'Escorihuela',zonaUnif:'Godoy Cruz',zona:'Godoy Cruz',web:'escorihuelagascon.com',tienda:'tienda.escorihuela.com',tieneTienda:true,techStack:'VTEX',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:4500000,tamano:'Grande',lineas:8},
+  {id:'138',nombre:'Esmeralda',zonaUnif:'Junín',zona:'Junín',web:'bodegasesmeralda.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:12000000,tamano:'Grande',lineas:10},
+  {id:'139',nombre:'Estancia Mendoza',zonaUnif:'San Martín',zona:'San Martín',web:'estanciamendoza.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fecovita',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:24000000,tamano:'Grande',lineas:12},
+  {id:'140',nombre:'Etnia',zonaUnif:'San Rafael',zona:'Rama Caída',web:'bodegaetnia.com',tienda:'bodegaetnia.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'Reg',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'141',nombre:'Fabre (Fabre Montmayou)',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'fabremontmayou.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'142',nombre:'Familia Blanco',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'familiablancowines.com',tienda:'bodegafamiliablanco.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'143',nombre:'Familia Cassone',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'familiacassone.com.ar',tienda:'familiacassone.com.ar/tienda',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'144',nombre:'Familia Cecchin',zonaUnif:'Maipú',zona:'Russell',web:'bodegacecchin.com.ar',tienda:'bodegacecchin.com.ar/tienda',tieneTienda:true,techStack:'WixCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'145',nombre:'Familia Crotta',zonaUnif:'San Martín',zona:'Palmira',web:'crotta.com.ar',tienda:'familiacrotta.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:8500000,tamano:'Grande',lineas:10},
+  {id:'146',nombre:'Familia Di Tommaso',zonaUnif:'Maipú',zona:'Russell',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'147',nombre:'Familia Furlan',zonaUnif:'San Carlos',zona:'La Consulta',web:'familia-furlan.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'148',nombre:'Familia Garavaglia',zonaUnif:'San Carlos',zona:'San Carlos',web:'familiagaravaglia.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:220000,tamano:'Boutique',lineas:4},
+  {id:'149',nombre:'Familia Mastrantonio',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'mastrantoniowines.com',tienda:'familiamastrantonio.com/collection',tieneTienda:true,techStack:'Custom',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'150',nombre:'Familia Morcos',zonaUnif:'San Martín',zona:'San Martín',web:'familiamorcos.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:1100000,tamano:'Mediana',lineas:5},
+  {id:'151',nombre:'Familia Zaina',zonaUnif:'San Carlos',zona:'La Consulta',web:'familiazaina.com.ar/',tienda:'familiazaina.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'152',nombre:'Familia Zanchetta (Bodega Raffy)',zonaUnif:'Tupungato',zona:'Gualtallary',web:'bodega-raffy-zanchetta.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:40,b2b:'Bout',vol:80000,tamano:'Boutique',lineas:3},
+  {id:'153',nombre:'FENIX',zonaUnif:'Maipú',zona:'Barrancas',web:'fincafenix.online',tienda:'fincafenix.online/tienda-de-vinos',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'154',nombre:'Ferraro',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'ferraro-wines.com',tienda:'ferraro-wines.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'155',nombre:'Ferrer (Finca Ferrer)',zonaUnif:'Tupungato',zona:'Gualtallary',web:'fincaferrer.com',tienda:'fincaferrerwines.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'156',nombre:'FILUS S.A.',zonaUnif:'Maipú',zona:'Lunlunta',web:'filuswine.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'157',nombre:'FINCA ABRIL S.A.',zonaUnif:'San Carlos',zona:'La Consulta',web:'fincaabril.com',tienda:'tienda.fincaabril.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'158',nombre:'Finca Agostino',zonaUnif:'Maipú',zona:'Barrancas',web:'agostinowinegroup.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'159',nombre:'FINCA LA PRUDENCIA S.R.L.',zonaUnif:'San Martín',zona:'Alto Verde',web:'laprudencia.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Nac',vol:3500000,tamano:'Grande',lineas:8},
+  {id:'160',nombre:'FINCA REIQUEHUE S.A.',zonaUnif:'San Carlos',zona:'Chilecito',web:'fincareiquehue.com',tienda:'fincareiquehue.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:280000,tamano:'Boutique',lineas:3},
+  {id:'161',nombre:'Finca Sophenia',zonaUnif:'Tupungato',zona:'Gualtallary',web:'sophenia.com.ar',tienda:'tienda.sophenia.com.ar',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'162',nombre:'Flechas de los Andes (Clos de los Siete)',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'flechasdelosandes.com',tienda:'vinoelsalvador.com',tieneTienda:true,techStack:'WooCommerce',grupo:'C. de los 7',mercFuerte:'Ext',exportPct:75,b2b:'Intl',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'163',nombre:'Flichman',zonaUnif:'Maipú',zona:'Barrancas',web:'flichman.com.ar',tienda:'tienda.flichman.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Pernod Ricard',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:12000000,tamano:'Grande',lineas:12},
+  {id:'164',nombre:'Florio',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'bodegaflorio.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'165',nombre:'Funckenhausen',zonaUnif:'San Rafael',zona:'San Rafael',web:'funckenhausen.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'166',nombre:'Furlotti',zonaUnif:'Luján de Cuyo',zona:'Chacras de Coria',web:'familiafurlotti.com',tienda:'familiafurlotti.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'167',nombre:'Galan',zonaUnif:'San Rafael',zona:'Cuadro Benegas',web:'bodegagalan.com.ar',tienda:'mercadolibre.com.ar/pagina/bodegagalan',tieneTienda:true,techStack:'Mercadolibre',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'168',nombre:'Gauchezco',zonaUnif:'Maipú',zona:'Barrancas',web:'gauchezco.com',tienda:'gauchezco.com/collections/all',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:900000,tamano:'Mediana',lineas:5},
+  {id:'169',nombre:'GENARO CACACE E HIJOS SRL',zonaUnif:'Rivadavia',zona:'Rivadavia',web:'bodegagenarocacace.com.ar/',tienda:'familianavarro.com.ar/tienda',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2200000,tamano:'Grande',lineas:6},
+  {id:'170',nombre:'GIAQUINTA HERMANOS S.R.L.',zonaUnif:'Tupungato',zona:'La Arboleda',web:'familiagiaquinta.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:18000,tamano:'Proyecto',lineas:1},
+  {id:'171',nombre:'GIAROLI',zonaUnif:'San Rafael',zona:'Las Paredes',web:'sites.google.com/view/bodegasgiaroli/la-bodega',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'172',nombre:'Giménez Riili',zonaUnif:'Tunuyán',zona:'Los Sauces',web:'gimenezriili.com',tienda:'gimenezriili.com/vinos',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'173',nombre:'Giramundo',zonaUnif:'San Martín',zona:'San Martín',web:'giramundowines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'174',nombre:'Gouguenheim Winery',zonaUnif:'Tupungato',zona:'San José',web:'gouguenheim.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'175',nombre:'Goulart',zonaUnif:'Maipú',zona:'Lunlunta',web:'goulartwinery.com',tienda:'goulartwinery.com/tienda',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'176',nombre:'Goyenechea',zonaUnif:'San Rafael',zona:'Villa Atuel',web:'goyenechea.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:2800000,tamano:'Grande',lineas:8},
+  {id:'177',nombre:'GRAND ESTATE S.A.S',zonaUnif:'San Rafael',zona:'San Rafael',web:'grandestate.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'178',nombre:'Gualtallary (Altus - Gualtallary Wines)',zonaUnif:'Tupungato',zona:'Gualtallary',web:'gualtallarywines.com/es/home/',tienda:'gualtallarywines.com/es/store',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'179',nombre:'GUARDIANES S. A. S',zonaUnif:'Maipú',zona:'Barrancas',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'180',nombre:'Hacienda Del Plata',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'haciendadelplata.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'181',nombre:'HECTOR MELI S.R.L.',zonaUnif:'Tupungato',zona:'San José',web:'familiameli.com/',tienda:'familiameli.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'182',nombre:'Hinojosa',zonaUnif:'Tunuyán',zona:'Las Pintadas',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'183',nombre:'Homo Felix',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'homofelix.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:20000,tamano:'Proyecto',lineas:2},
+  {id:'184',nombre:'Huarpe',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'wht.com.ar/',tienda:'wht.com.ar/tienda-hr',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'185',nombre:'Huentala Wines',zonaUnif:'Tupungato',zona:'Gualtallary',web:'huentalawines.com.ar/',tienda:'store.huentalawines.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:5},
+  {id:'186',nombre:'Iaccarini',zonaUnif:'San Rafael',zona:'San Rafael',web:'bodegaiaccarini.com.ar/',tienda:'iaccariniwines.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'187',nombre:'Ibarra',zonaUnif:'San Rafael',zona:'Las Paredes',web:'bodegafamiliaibarra.com.ar/',tienda:'bodegafamiliaibarra.com.ar/familia-ibarra',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'188',nombre:'Iral',zonaUnif:'Maipú',zona:'Maipú',web:'fincairal.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:85000,tamano:'Boutique',lineas:3},
+  {id:'189',nombre:'Iúdica (Iúdica Vinos S.A.)',zonaUnif:'Maipú',zona:'San Roque',web:'bodegaiudica.com.ar/',tienda:'bodegaiudica.com.ar/#catalogo',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'190',nombre:'Jean Rivier',zonaUnif:'San Rafael',zona:'San Rafael',web:'jeanrivier.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'191',nombre:'Joffré (RJ Viñedos)',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'rjvinedos.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:30,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'192',nombre:'Kaiken',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'kaikenwines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'193',nombre:'Kalos Wines',zonaUnif:'Maipú',zona:'Perdriel',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:10,b2b:'Reg',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'194',nombre:'Kineta',zonaUnif:'Maipú',zona:'Fray Luis Beltrán',web:'bodegakineta.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'195',nombre:'Krontiras',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'krontiraswines.com',tienda:'krontiraswines.com/tienda-organica',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'196',nombre:'La Abeja',zonaUnif:'San Rafael',zona:'San Rafael',web:'bodegalaabeja.com.ar',tienda:'bodegalaabeja.com.ar/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'197',nombre:'La Amalia',zonaUnif:'Luján de Cuyo',zona:'Carrodilla',web:'amalia.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'198',nombre:'La Azul',zonaUnif:'Tupungato',zona:'Agua Amarga',web:'bodegalaazul.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'199',nombre:'La Cayetana',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'200',nombre:'La Celia',zonaUnif:'San Carlos',zona:'Eugenio Bustos',web:'laceliawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Gpo. Roemmers',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:4000000,tamano:'Grande',lineas:8},
+  {id:'201',nombre:'La Coste de los Andes',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'lacostedelosandes.com.ar',tienda:'lacostedelosandes.com.ar/productos',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'202',nombre:'La Finquita 1920',zonaUnif:'Maipú',zona:'Maipú',web:'lafinquita1920.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:75000,tamano:'Boutique',lineas:2},
+  {id:'203',nombre:'La Giostra del Vino',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:40000,tamano:'Proyecto',lineas:2},
+  {id:'204',nombre:'LA IRIDE S.R.L.',zonaUnif:'Maipú',zona:'Rodeo del Medio',web:'lairide.com.ar',tienda:'tienda.lairide.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:3500000,tamano:'Grande',lineas:7},
+  {id:'205',nombre:'La Liga de los Enólogos - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Coquimbito',web:'laligadeenologos.com.ar',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2000000,tamano:'Grande',lineas:5},
+  {id:'206',nombre:'La Luz',zonaUnif:'Tunuyán',zona:'Villa Seca',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'207',nombre:'La Rosa - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Coquimbito',web:'No tiene',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:25,b2b:'Intl',vol:6000000,tamano:'Grande',lineas:9},
+  {id:'208',nombre:'La Rural',zonaUnif:'Maipú',zona:'Coquimbito',web:'bodegalarural.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:8500000,tamano:'Grande',lineas:11},
+  {id:'209',nombre:'LA VENDIMIA S.A.I.C.F.',zonaUnif:'San Rafael',zona:'San Rafael',web:'bodegalavendimia.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:2200000,tamano:'Grande',lineas:6},
+  {id:'210',nombre:'La Vieja Bodega Serra',zonaUnif:'San Rafael',zona:'Rama Caída',web:'bodegaserra.com.ar',tienda:'bodegaserra.com.ar/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'211',nombre:'Labiano',zonaUnif:'San Rafael',zona:'Rama Caída',web:'bodegalabiano.com',tienda:'bodegalabiano.com/labiano/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'212',nombre:'Lagarde',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'lagarde.com.ar',tienda:'mercadolibre.com.ar/tienda/lagarde',tieneTienda:true,techStack:'Mercado Libre',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:2100000,tamano:'Grande',lineas:7},
+  {id:'213',nombre:'Lamadrid Estate Wines',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'lamadridwines.com',tienda:'lamadridwines.com/lamadrid-clasicos',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:650000,tamano:'Mediana',lineas:5},
+  {id:'214',nombre:'Las Moras - Grupo Peñaflor',zonaUnif:'San Juan',zona:'Zonda y Pedernal',web:'fincalasmoras.com.ar',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:18000000,tamano:'Grande',lineas:12},
+  {id:'215',nombre:'Laureano Gomez',zonaUnif:'Tunuyán',zona:'Tunuyán',web:'bodegagarage.com',tienda:'bodegagarage.com',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'216',nombre:'Llaver',zonaUnif:'San Martín',zona:'San Martín',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:6},
+  {id:'217',nombre:'LOMAS DEL MALBEC S.A.',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'lomasdelmalbec.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'218',nombre:'López',zonaUnif:'Maipú',zona:'Gutiérrez',web:'bodegaslopez.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:15000000,tamano:'Grande',lineas:14},
+  {id:'219',nombre:'Lorenzo de Agrelo',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'lorenzowines.com.ar',tienda:'lorenzowines.com.ar/shop-list',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'220',nombre:'Los Haroldos',zonaUnif:'San Martín',zona:'San Martín',web:'losharoldos.com',tienda:'familiafalasco.com',tieneTienda:true,techStack:'Shopify',grupo:'Fam. Falasco',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:40000000,tamano:'Grande',lineas:15},
+  {id:'221',nombre:'Los Helechos',zonaUnif:'Tupungato',zona:'El Peral',web:'No tiene',tienda:'tienda.fecovita.com',tieneTienda:true,techStack:'Shopify',grupo:'Fecovita',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'222',nombre:'Los Maza',zonaUnif:'Maipú',zona:'Maipú',web:'flmwines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'223',nombre:'Los Noques (Bonetto)',zonaUnif:'San Carlos',zona:'La Consulta',web:'losnoques.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'224',nombre:'Los Toneles',zonaUnif:'Guaymallén',zona:'Guaymallén',web:'bodegalostoneles.com',tienda:'www.tienda.familiamillan.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Fam. Millán',mercFuerte:'Arg',exportPct:25,b2b:'Intl',vol:3500000,tamano:'Grande',lineas:8},
+  {id:'225',nombre:'Luca',zonaUnif:'Tupungato',zona:'Gualtallary',web:'lucawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Catena Fam.',mercFuerte:'Ext',exportPct:75,b2b:'Intl',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'226',nombre:'Lui Wines',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'luiwines.com',tienda:'tienda.luiwines.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'227',nombre:'Luigi Bosca',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'luigibosca.com',tienda:'tienda.luigibosca.com',tieneTienda:true,techStack:'VTEX',grupo:'Indep.',mercFuerte:'Arg',exportPct:40,b2b:'Intl',vol:6000000,tamano:'Grande',lineas:12},
+  {id:'228',nombre:'LUIS MORA S.A.',zonaUnif:'Luján de Cuyo',zona:'Ugarteche',web:'bodegaluismora.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'229',nombre:'Luis Segundo Correas',zonaUnif:'Rivadavia',zona:'Medrano',web:'bodegacorreas.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:null,tamano:'Desconocido',lineas:1},
+  {id:'230',nombre:'Lupa Wines',zonaUnif:'Tupungato',zona:'Gualtallary',web:'lupawines.com',tienda:'lupawines.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'231',nombre:'Maal Wines',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'maalwines.com',tienda:'maal4.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'232',nombre:'Magna Montis',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'magnamontis.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:45000,tamano:'Proyecto',lineas:2},
+  {id:'233',nombre:'MAINQUE',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'bodegasmainque.com.ar',tienda:'bodegasmainque.com.ar/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'234',nombre:'MAISON NEUVE S.R.L.',zonaUnif:'Rivadavia',zona:'Rivadavia',web:'rougemaison.com.ar/',tienda:'rougemaison.com.ar/',tieneTienda:true,techStack:'VTEX',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'235',nombre:'MAKILA SRL',zonaUnif:'San Rafael',zona:'Cañada Seca',web:'makilabodega.com.ar',tienda:'tiendamakila.com.ar',tieneTienda:true,techStack:'Empretienda',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'236',nombre:'MANUEL M MUSSE Y OTRA',zonaUnif:'Rivadavia',zona:'Medrano',web:'familiamusse.com',tienda:'familiamusse.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'237',nombre:'Marcelo Pelleriti Wines',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'pelleritipriore.com',tienda:'pelleritipriore.store',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:4},
+  {id:'238',nombre:'Marchiori & Barraud',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'marchioribarraud.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'239',nombre:'Margot - Quincho Maula',zonaUnif:'Tupungato',zona:'El Álamo',web:'bodegamargot.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'240',nombre:'Martha',zonaUnif:'San Rafael',zona:'San Rafael',web:'fincamartha.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'241',nombre:'Martino Wines',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'martinowines.com.ar',tienda:'tienda.martinowines.com.ar',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'242',nombre:'Mascota Vineyards - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'mascotavineyards.com',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:2800000,tamano:'Grande',lineas:8},
+  {id:'243',nombre:'Masi Tupungato',zonaUnif:'Tupungato',zona:'La Arboleda',web:'masitupungato.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'244',nombre:'Mastroeni',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'245',nombre:'Matervini',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'matervini.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:40,b2b:'Bout',vol:80000,tamano:'Boutique',lineas:3},
+  {id:'246',nombre:'MAURICIO LORCA S.A.',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegafosterlorca.com',tienda:'bodegafosterlorca.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Foster Lorca',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'247',nombre:'Mayol',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'248',nombre:'Melipal',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'249',nombre:'Mendel',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'mendel.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'250',nombre:'Mendoza Vineyeards',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'mendozavineyards.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:4000000,tamano:'Grande',lineas:8},
+  {id:'251',nombre:'Mesidor (Cooperativa Vitivinícola Nueva California)',zonaUnif:'San Martín',zona:'Nueva California',web:'bodeganuevacalifornia.com/',tienda:'bodeganuevacalifornia.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Coop.',mercFuerte:'Arg',exportPct:5,b2b:'Nac',vol:15000000,tamano:'Grande',lineas:10},
+  {id:'252',nombre:'Mevi',zonaUnif:'Maipú',zona:'Maipú',web:'fincamevi.com.ar',tienda:'mevi.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'253',nombre:'Mi Terruño',zonaUnif:'Maipú',zona:'Maipú',web:'bodegamiterruno.com.ar',tienda:'tiendabodegamiterruno.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'254',nombre:'MIGUEL MINNI',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegamiguelminni.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'255',nombre:'Mil Suelos (Proyecto Enológico)',zonaUnif:'Maipú',zona:'Chachingo',web:'milsuelos.com',tienda:'milsuelos.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:4},
+  {id:'256',nombre:'Minimal',zonaUnif:'Maipú',zona:'Maipú',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:15000,tamano:'Proyecto',lineas:1},
+  {id:'257',nombre:'Monte Quieto Sa',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'montequieto.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:220000,tamano:'Boutique',lineas:4},
+  {id:'258',nombre:'Monteviejo',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'monteviejo.com.ar',tienda:'wines.monteviejo.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'C. de los 7',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'259',nombre:'MONTLAIZ',zonaUnif:'San Martín',zona:'Montecaseros',web:'montlaiz.com',tienda:'montlaiz.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:3500000,tamano:'Grande',lineas:7},
+  {id:'260',nombre:'Mundo Revés',zonaUnif:'Tupungato',zona:'Tupungato',web:'mundoreveswines.com',tienda:'mundoreves.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Mza',exportPct:10,b2b:'Reg',vol:null,tamano:'Desconocido',lineas:1},
+  {id:'261',nombre:'Nasha Wines',zonaUnif:'Luján de Cuyo',zona:'Luján de Cuyo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:12000,tamano:'Proyecto',lineas:1},
+  {id:'262',nombre:'Navarro Correas - Grupo Peñaflor',zonaUnif:'Godoy Cruz',zona:'Godoy Cruz',web:'navarrocorreas.com.ar/es/',tienda:'vinosyspirits.com/',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:25,b2b:'Intl',vol:8500000,tamano:'Grande',lineas:10},
+  {id:'263',nombre:'Nieto Senetiner',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'nietosenetiner.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Gpo. Molinos',mercFuerte:'Arg',exportPct:25,b2b:'Intl',vol:12000000,tamano:'Grande',lineas:14},
+  {id:'264',nombre:'Niven',zonaUnif:'Junín',zona:'Junín',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'265',nombre:'Norton',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'norton.com.ar',tienda:'shop.norton.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:10800000,tamano:'Grande',lineas:15},
+  {id:'266',nombre:'O. Fournier (Santa Sofía)',zonaUnif:'San Carlos',zona:'La Consulta',web:'ofournier.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'267',nombre:'Ojo de Agua',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'ojodeagua.global',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'268',nombre:'Onofri Wines',zonaUnif:'Lavalle',zona:'Lavalle',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza/Arg',exportPct:10,b2b:'Bout',vol:35000,tamano:'Proyecto',lineas:2},
+  {id:'269',nombre:'Otero Ramos',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'270',nombre:'Palo Alto',zonaUnif:'San Martín',zona:'San Martín',web:'bodegapaloalto.com.ar/es',tienda:'bodegapaloalto3.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'271',nombre:'Paso a Paso Wines',zonaUnif:'Las Heras',zona:'El Algarrobal',web:'pasoapasowines.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza/Arg',exportPct:5,b2b:'DTC',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'272',nombre:'PATRON SANTIAGO S.A.',zonaUnif:'Maipú',zona:'Rodeo del Medio',web:'patronsantiago.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'273',nombre:'Penedo Borges Boutique',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'penedoborges.com',tienda:'tienda.penedoborges.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'274',nombre:'PER SE VINES SA',zonaUnif:'Tupungato',zona:'Gualtallary',web:'persevines.com/',tienda:'https://persevines.com/tienda/',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Ext',exportPct:40,b2b:'Bout',vol:18000,tamano:'Proyecto',lineas:1},
+  {id:'275',nombre:'Piattelli',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'piattellivineyards.com',tienda:'piattellidirect.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'276',nombre:'Piedra Negra (François Lurton)',zonaUnif:'Luján de Cuyo',zona:'Vista Flores',web:'bodegapiedranegra.com/',tienda:'tienda.bodegapiedranegra.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:900000,tamano:'Mediana',lineas:6},
+  {id:'277',nombre:'Poesia',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'278',nombre:'Privado Oasis Sur (Jorge Rubio)',zonaUnif:'General Alvear',zona:'General Alvear',web:'autorjorgerubio.com.ar/',tienda:'tienda.autorjorgerubio.com.ar/',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'279',nombre:'Proemio Wines',zonaUnif:'Maipú',zona:'Russell',web:'proemiowines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'280',nombre:'Pulenta Estate',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'pulentaestate.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:7},
+  {id:'281',nombre:'Puramun',zonaUnif:'Tupungato',zona:'San José',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'282',nombre:'QUATTROCCHI',zonaUnif:'Lavalle',zona:'Costa de Araujo',web:'bodegaquattrocchi.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'283',nombre:'RAMA CAIDA S.A.',zonaUnif:'San Rafael',zona:'Rama Caída',web:'ramacaida.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Nac',vol:3500000,tamano:'Grande',lineas:8},
+  {id:'284',nombre:'Raquis',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'raquis.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'DTC',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'285',nombre:'Renacer',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegarenacer.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Gpo. Molinos',mercFuerte:'Ext',exportPct:50,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'286',nombre:'REVAL SAN ISIDRO S.A.',zonaUnif:'Rivadavia',zona:'Rivadavia',web:'revalsanisidro.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Nac',vol:4000000,tamano:'Grande',lineas:8},
+  {id:'287',nombre:'Ricardo Santos',zonaUnif:'Maipú',zona:'Russell',web:'ricardosantos.com/main/index.php/',tienda:'ricardosantos.com/main/?page_id=3935',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'288',nombre:'Riccitelli Wines',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'matiasriccitelli.com',tienda:'matiasriccitelli.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:450000,tamano:'Mediana',lineas:5},
+  {id:'289',nombre:'Richardi Fazio Menegazzo',zonaUnif:'Guaymallén',zona:'Rodeo de la Cruz',web:'bodegarfm.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'290',nombre:'Ricominciare',zonaUnif:'San Carlos',zona:'La Consulta',web:'ricominciare.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:80000,tamano:'Boutique',lineas:3},
+  {id:'291',nombre:'Riglos',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'rigloswines.com',tienda:'wht.com.ar/tienda-hr',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:180000,tamano:'Boutique',lineas:4},
+  {id:'292',nombre:'Rolland',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'bodegarolland.com',tienda:'bodegarolland.com/tienda',tieneTienda:true,techStack:'WooCommerce',grupo:'C. de los 7',mercFuerte:'Ext',exportPct:75,b2b:'Intl',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'293',nombre:'Rosell Boher',zonaUnif:'Luján de Cuyo',zona:'Chacras de Coria',web:'rosellboher.com/',tienda:'tienda.rosellboher.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'294',nombre:'RUBINO HNOS.SACIFA',zonaUnif:'Guaymallén',zona:'Rodeo de la Cruz',web:'familiarubino.com',tienda:'shop.familiarubino.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'295',nombre:'Ruca Malén',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bodegarucamalen.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Gpo. Molinos',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'296',nombre:'Ruggeri',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'bodegaruggeri.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'297',nombre:'Rutini (La Rural)',zonaUnif:'Maipú',zona:'Coquimbito',web:'rutiniwines.com',tienda:'tienda.rutiniwines.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:7500000,tamano:'Grande',lineas:11},
+  {id:'298',nombre:'Salada Wines',zonaUnif:'San Rafael',zona:'San Rafael',web:'seladawines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:0,b2b:'DTC',vol:25000,tamano:'Proyecto',lineas:2},
+  {id:'299',nombre:'Salentein',zonaUnif:'Tunuyán',zona:'Los Árboles',web:'bodegasalentein.com',tienda:'bodegasalentein.com/mediasiteintro',tieneTienda:true,techStack:'Custom',grupo:'Gpo. Salentein',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:9000000,tamano:'Grande',lineas:9},
+  {id:'300',nombre:'San Humberto',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'www.bodegassanhuberto.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:2500000,tamano:'Grande',lineas:7},
+  {id:'301',nombre:'San Polo',zonaUnif:'San Carlos',zona:'La Consulta',web:'sanpolo.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'302',nombre:'San Telmo - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'bodegasantelmo.com.ar',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:25,b2b:'Intl',vol:8000000,tamano:'Grande',lineas:10},
+  {id:'303',nombre:'SANCHEZ S.A.',zonaUnif:'Luján de Cuyo',zona:'El Carrizal',web:'bodegasanchezsa.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'304',nombre:'Santa Ana - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Maipú',web:'No tiene',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:18000000,tamano:'Grande',lineas:12},
+  {id:'305',nombre:'Santa Julia',zonaUnif:'Maipú',zona:'Maipú',web:'santajulia.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fam. Zuccardi',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:25000000,tamano:'Grande',lineas:16},
+  {id:'306',nombre:'Sarapura Wines',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Mza',exportPct:5,b2b:'Reg',vol:35000,tamano:'Proyecto',lineas:2},
+  {id:'307',nombre:'Sardi',zonaUnif:'Las Heras',zona:'Algarrobal',web:'fincasardi.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'308',nombre:'Savina',zonaUnif:'Maipú',zona:'Lunlunta',web:'bodegafincasavina.com/',tienda:'bodegafincasavina.com/categoria-producto/vinos/',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Reg',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'309',nombre:'Septima',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'bodegaseptima.com',tienda:'tienda.bodegaseptima.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Codorníu',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:3500000,tamano:'Grande',lineas:8},
+  {id:'310',nombre:'Serrera Wines',zonaUnif:'Luján de Cuyo',zona:'Cuchillas de Lunlunta',web:'serrera.com.ar',tienda:'serrerawines.com/tienda',tieneTienda:true,techStack:'Custom',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'311',nombre:'SIMONASSI LYON SA.',zonaUnif:'San Rafael',zona:'Rama Caída',web:'bodegasimonassilyon.com/#!/-bienvenids/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'312',nombre:'Sin Fin',zonaUnif:'Maipú',zona:'Russell',web:'bodegasinfin.com',tienda:'tienda.bodegasinfin.com',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg',exportPct:25,b2b:'Nac',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'313',nombre:'Solo Contigo Wine',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:4},
+  {id:'314',nombre:'Sottano',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'bodegasottano.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'315',nombre:'Staphyle',zonaUnif:'Luján de Cuyo',zona:'Carrodilla',web:'staphyle.com',tienda:'mercadolibre.com.ar/tienda/staphyle',tieneTienda:true,techStack:'Mercadolibre',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:900000,tamano:'Mediana',lineas:5},
+  {id:'316',nombre:'Stellium',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'317',nombre:'Stocco de Viani',zonaUnif:'Maipú',zona:'Rodeo del Medio',web:'stoccodeviani.com.ar/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'318',nombre:'Suarez',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'fincasuarez.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'319',nombre:'Super Uco',zonaUnif:'Tunuyán',zona:'Los Chacayes',web:'superuco.com',tienda:'superuco.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'320',nombre:'Susana Balbo (Dominio del Plata)',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'susanabalbowines.com.ar',tienda:'tienda.susanabalbowines.com.ar',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:2500000,tamano:'Grande',lineas:8},
+  {id:'321',nombre:'Suter - Grupo Peñaflor',zonaUnif:'San Rafael',zona:'Las Paredes',web:'bodegasuter.com.ar/',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:10000000,tamano:'Grande',lineas:11},
+  {id:'322',nombre:'Tempus Alba',zonaUnif:'Maipú',zona:'Coquimbito',web:'tempusalba.com',tienda:'tempusalba.com',tieneTienda:true,techStack:'Whatsapp',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:4},
+  {id:'323',nombre:'TERRACOTA WINELAND S.A.',zonaUnif:'San Carlos',zona:'La Consulta',web:'terracotawineland.com/',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'324',nombre:'Terrazas De Los Andes',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'terrazasdelosandes.com/es-ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'LVMH',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:6500000,tamano:'Grande',lineas:9},
+  {id:'325',nombre:'TIERRA DE ANDES',zonaUnif:'San Martín',zona:'Alto Salvador',web:'tierradeandes.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1800000,tamano:'Grande',lineas:6},
+  {id:'326',nombre:'Tierras Altas',zonaUnif:'Luján de Cuyo',zona:'Carrodilla',web:'familiavargasarizu.com',tienda:'tierrasaltasbodega.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'327',nombre:'Tittarelli Wines',zonaUnif:'Rivadavia',zona:'La Libertad',web:'tittarelli.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:4500000,tamano:'Grande',lineas:8},
+  {id:'328',nombre:'TORNAGHI S.A.',zonaUnif:'San Rafael',zona:'El Cerrito',web:'tornaghi.com.ar',tienda:'tornaghi.com.ar/shop',tieneTienda:true,techStack:'Odoo',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'329',nombre:'Torreleones',zonaUnif:'Guaymallén',zona:'Rodeo de la Cruz',web:'bodegatorreleones.com',tienda:'tiendabodegatorreleones.com.ar',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:0,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'330',nombre:'Toso',zonaUnif:'Tupungato',zona:'San José',web:'bodegastoso.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:60,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'331',nombre:'Trapiche - Grupo Peñaflor',zonaUnif:'Maipú',zona:'Maipú',web:'trapiche.com.ar/comin/bodega/',tienda:'vinosyspirits.com',tieneTienda:true,techStack:'Shopify',grupo:'Gpo. Peñaflor',mercFuerte:'Arg/Ext',exportPct:60,b2b:'Intl',vol:31500000,tamano:'Grande',lineas:18},
+  {id:'332',nombre:'Traslapiedra',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'traslatienda.com',tienda:'traslatienda.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Reg',vol:60000,tamano:'Boutique',lineas:2},
+  {id:'333',nombre:'Trivento',zonaUnif:'Maipú',zona:'Russell',web:'trivento.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Concha y Toro',mercFuerte:'Ext',exportPct:80,b2b:'Intl',vol:20000000,tamano:'Grande',lineas:15},
+  {id:'334',nombre:'URUCO WINES',zonaUnif:'Tupungato',zona:'El Peral',web:'urucowines.com',tienda:'tienda.urucowines.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:150000,tamano:'Boutique',lineas:3},
+  {id:'335',nombre:'VALLE DEL ATUEL S.A.',zonaUnif:'General Alvear',zona:'El Desvío',web:'bodegavalledelatuel.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:2200000,tamano:'Grande',lineas:6},
+  {id:'336',nombre:'Valle del Indio',zonaUnif:'Luján de Cuyo',zona:'Las Compuertas',web:'bodegavalledelindio.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:300000,tamano:'Boutique',lineas:4},
+  {id:'337',nombre:'Viamonte Winery',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'viamontewinery.com',tienda:'viamontewinery.com/shop',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:450000,tamano:'Mediana',lineas:4},
+  {id:'338',nombre:'VIDITA VINEYARDS S.A.',zonaUnif:'Lavalle',zona:'Costa de Araujo',web:'viditawines.mitiendanube.com',tienda:'viditawines.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Reg',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'339',nombre:'VIGNES DES ANDES S.A.',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'vignesdesandes.com',tienda:'tienda.vignesdesandes.com',tieneTienda:true,techStack:'WooCommerce',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:220000,tamano:'Boutique',lineas:4},
+  {id:'340',nombre:'VINECOL S.A.',zonaUnif:'La Paz',zona:'La Paz',web:'vinecol.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:600000,tamano:'Mediana',lineas:5},
+  {id:'341',nombre:'Vinorum - Familia Altieri',zonaUnif:'Luján de Cuyo',zona:'Perdriel',web:'vinorum.com.ar',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fam. Altieri',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:350000,tamano:'Mediana',lineas:4},
+  {id:'342',nombre:'Vinos de Potrero',zonaUnif:'Tupungato',zona:'Gualtallary',web:'vinosdepotrero.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Reg',vol:90000,tamano:'Boutique',lineas:3},
+  {id:'343',nombre:'Viña Alicia',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'vinaalicia.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:30,b2b:'Nac',vol:120000,tamano:'Boutique',lineas:3},
+  {id:'344',nombre:'Viña Cobos',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'vinacobos.com',tienda:'tienda.vinacobos.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Ext',exportPct:70,b2b:'Intl',vol:1800000,tamano:'Grande',lineas:7},
+  {id:'345',nombre:'Viña Las Perdices',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'lasperdices.com',tienda:'lasperdices.com',tieneTienda:true,techStack:'VTEX',grupo:'Indep.',mercFuerte:'Arg',exportPct:30,b2b:'Intl',vol:4500000,tamano:'Grande',lineas:9},
+  {id:'346',nombre:'Viñas de Alvear',zonaUnif:'General Alvear',zona:'General Alvear',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:5,b2b:'Nac',vol:3500000,tamano:'Grande',lineas:7},
+  {id:'347',nombre:'Viñas de Balbo',zonaUnif:'San Martín',zona:'San Martín',web:'vinasdebalbo.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:10,b2b:'Nac',vol:18000000,tamano:'Grande',lineas:10},
+  {id:'348',nombre:'VIÑEDOS Y OLIVARES DEL OESTE S.A.',zonaUnif:'Junín',zona:'Los Barriales',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'349',nombre:'Vista Flores',zonaUnif:'Tunuyán',zona:'Vista Flores',web:'vistafloresestate.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:400000,tamano:'Mediana',lineas:4},
+  {id:'350',nombre:'Vistalba',zonaUnif:'Luján de Cuyo',zona:'Vistalba',web:'bodegavistalba.com',tienda:'bodegavistalba.com/tienda',tieneTienda:true,techStack:'Prestashop',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:40,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'351',nombre:'Vistandes',zonaUnif:'Maipú',zona:'Cruz de Piedra',web:'vistandes.com',tienda:'vistandes.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:20,b2b:'Nac',vol:800000,tamano:'Mediana',lineas:5},
+  {id:'352',nombre:'WALIORS S.A.',zonaUnif:'Junín',zona:'La Colonia',web:'bodegawaliors.wixsite.com/waliors',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:250000,tamano:'Boutique',lineas:3},
+  {id:'353',nombre:'Weinert',zonaUnif:'Luján de Cuyo',zona:'Mayor Drummond',web:'bodegaweinert.com',tienda:'bodegaweinert.com/collections/vinos',tieneTienda:true,techStack:'Shopify',grupo:'Indep.',mercFuerte:'Arg/Ext',exportPct:45,b2b:'Intl',vol:1500000,tamano:'Mediana',lineas:6},
+  {id:'354',nombre:'ZINGARETTI (Antonio)',zonaUnif:'Maipú',zona:'Gutiérrez',web:'zingarettiwines.mitiendanube.com',tienda:'zingarettiwines.mitiendanube.com',tieneTienda:true,techStack:'Tiendanube',grupo:'Indep.',mercFuerte:'Arg',exportPct:15,b2b:'Nac',vol:180000,tamano:'Boutique',lineas:3},
+  {id:'355',nombre:'Zolo - Fincas Patagónicas',zonaUnif:'Luján de Cuyo',zona:'Agrelo',web:'No tiene',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fincas Pat.',mercFuerte:'Arg/Ext',exportPct:50,b2b:'Intl',vol:1200000,tamano:'Mediana',lineas:6},
+  {id:'356',nombre:'Zorzal Wines',zonaUnif:'Tupungato',zona:'Gualtallary',web:'zorzalwines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Indep.',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:650000,tamano:'Mediana',lineas:5},
+  {id:'357',nombre:'Zuccardi Valle de Uco (Piedra Infinita)',zonaUnif:'San Carlos',zona:'Paraje Altamira',web:'zuccardiwines.com',tienda:'No tiene',tieneTienda:false,techStack:'No aplica',grupo:'Fam. Zuccardi',mercFuerte:'Ext',exportPct:65,b2b:'Intl',vol:2500000,tamano:'Grande',lineas:8}
+];
+
+
+// ═══ SCORING ENGINE ═══
+const SCORING_CONFIG = {
+  volumen: { 'Grande': 30, 'Mediana': 20, 'Boutique': 10, 'Proyecto': 0, 'Desconocido': 0, default: 0 },
+  agilidad: { 'Indep.': 20, 'Independientes': 20, 'Independiente': 20, default: 0 },
+  tiers: [
+    { min: 70, name: 'Tier 1', priority: 'Inmediata', color: '#ffcd47' },
+    { min: 40, name: 'Tier 2', priority: 'Corto Plazo', color: '#38a9f5' },
+    { min: 15, name: 'Tier 3', priority: 'Mediano Plazo', color: '#a871ff' },
+    { min: 0,  name: 'Tier 4', priority: 'Nurturing', color: '#8b95b0' }
+  ]
+};
+
+
+const PLAYBOOK_BANK = {
+  elColapso: {
+    proceso: "1. Buscar Gte Comercial en LinkedIn ➔ 2. Mail (Apollo) ➔ 3. Conectar LinkedIn ➔ 4. Follow-up WhatsApp",
+    mensaje: "Hola [Nombre], noté el gran volumen que manejan en mercado interno. Vi que su tienda está en [Plataforma]. ¿Cómo están resolviendo los quiebres de stock en pedidos B2B mayoristas y la gestión de múltiples listas de precios sin que colapse el sistema? En CH-Ecommerce centralizamos esto de forma nativa. ¿Tienen 15 min esta semana para mostrarles cómo funciona?"
+  },
+  dolorFinanciero: {
+    proceso: "1. Buscar Gte Financiero o Comercial ➔ 2. Enviar Mail de reducción de costos ➔ 3. Conectar LinkedIn",
+    mensaje: "Hola [Nombre], excelente el trabajo que hacen en mercado interno. Vi que operan sobre [Plataforma]. Al enfocarse en el mercado nacional, ¿están absorbiendo el costo extra por integrar pasarelas de pago locales o lo trasladan al precio? Nuestra arquitectura en CH-Ecommerce elimina esas comisiones ocultas y licencias por usuario. Me gustaría mostrarles los números."
+  },
+  greenfield: {
+    proceso: "1. Contacto directo con Dirección o Gerencia General ➔ 2. Venta muy consultiva (Mail -> LinkedIn)",
+    mensaje: "Hola [Nombre], sigo de cerca el crecimiento de [Bodega]. Manejan un volumen excelente, pero noté que su canal mayorista no está digitalizado. ¿Evaluaron armar un portal B2B privado para sus distribuidores que se conecte directo a su ERP actual? Es un salto operativo enorme. ¿Hablamos la semana que viene?"
+  },
+  d2cValidado: {
+    proceso: "1. Contactar a Dueño o Gte Comercial ➔ 2. Mensaje directo de profesionalización",
+    mensaje: "Hola [Nombre], gran trabajo posicionando [Bodega] en el canal directo. Vi que usan [Plataforma]. ¿Están listos para profesionalizar la operativa sin atarse a altos costos iniciales o comisiones por venta? CH-Ecommerce es el paso lógico para bodegas boutique que están escalando. ¿Charlemos 10 min?"
+  }
+};
+
+function copyMsg(btn) {
+  const msg = btn.getAttribute('data-msg');
+  navigator.clipboard.writeText(msg).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  });
+}
+
+const PITCH_BANK = {
+  elColapso: "La bodega está escalando con WooCommerce/Tiendanube. Con este volumen, los colapsos de plugins y caídas de base de datos son inminentes. CH-Ecommerce les da escalabilidad enterprise sin dolores de cabeza.",
+  dolorFinanciero: "Están usando plataformas dolarizadas (Shopify/VTEX) mientras venden en el mercado interno. Las retenciones locales y tipos de cambio destruyen sus márgenes. CH-Ecommerce cobra en pesos y sin peajes por transacción.",
+  greenfield: "Son una bodega con volumen (Mediana/Grande) pero aún sin e-commerce directo al consumidor. Es un lienzo en blanco para implementar la mejor tecnología desde el día 1.",
+  d2cValidado: "Bodega de nicho que ya probó el modelo D2C. Están listos para el siguiente paso de profesionalización sin atarse a altos costos iniciales.",
+  agilidad: "Tienen capacidad de decisión ágil (sin trabas corporativas). La venta puede cerrarse rápido y con trato directo a dueños/directores.",
+  volumen: "Cuentan con un volumen de litros importante que garantiza recurrencia y la necesidad real de multidepósitos."
+};
+
+
+function openEditor() {
+  document.getElementById('scoring-modal').classList.add('open');
+}
+
+document.getElementById('scoring-modal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+// Save from UI and re-apply scoring
+let globalDolorConfig = { colapso: 40, financiero: 35, greenfield: 25, d2c: 15 };
+
+function saveAndRecalculate() {
+  // Update Config Object
+  globalDolorConfig.colapso = parseInt(document.getElementById('sc-colapso').value) || 0;
+  globalDolorConfig.financiero = parseInt(document.getElementById('sc-financiero').value) || 0;
+  globalDolorConfig.greenfield = parseInt(document.getElementById('sc-greenfield').value) || 0;
+  globalDolorConfig.d2c = parseInt(document.getElementById('sc-d2c').value) || 0;
+  
+  SCORING_CONFIG.volumen['Grande'] = parseInt(document.getElementById('sc-vol-gde').value) || 0;
+  SCORING_CONFIG.volumen['Mediana'] = parseInt(document.getElementById('sc-vol-med').value) || 0;
+  
+  SCORING_CONFIG.agilidad['Indep.'] = parseInt(document.getElementById('sc-agilidad').value) || 0;
+  SCORING_CONFIG.agilidad['Independientes'] = parseInt(document.getElementById('sc-agilidad').value) || 0;
+  SCORING_CONFIG.agilidad['Independiente'] = parseInt(document.getElementById('sc-agilidad').value) || 0;
+
+  // Re-run scoring on master DATA
+  applyScoring(DATA);
+  
+  // Re-run filters and rendering
+  applyFilters();
+  
+  document.getElementById('scoring-modal').classList.remove('open');
+}
+
+function applyScoring(data) {
+  data.forEach(b => {
+    let score = 0;
+    let breakdown = [];
+    
+    // Volumen
+    let vPts = SCORING_CONFIG.volumen[b.tamano] ?? SCORING_CONFIG.volumen.default;
+    score += vPts;
+    if (vPts > 0) breakdown.push({ val: vPts, cat: 'Volumen', reason: b.tamano, pitch: 'volumen' });
+
+    // Agilidad
+    let isIndep = !b.grupo || b.grupo === 'Indep.' || b.grupo.toLowerCase().includes('independiente');
+    let aPts = isIndep ? 20 : 0;
+    score += aPts;
+    if (aPts > 0) breakdown.push({ val: aPts, cat: 'Agilidad', reason: 'Decisión Independiente', pitch: 'agilidad' });
+
+    // Mercado Fuerte (Nac/Reg/Arg/Mza)
+    let mf = (b.mercFuerte || '').toLowerCase();
+    let isLocal = mf.includes('nac') || mf.includes('reg') || mf.includes('arg') || mf.includes('mza');
+    let mPts = isLocal ? 10 : 0;
+    score += mPts;
+    if (mPts > 0) breakdown.push({ val: mPts, cat: 'Mdo Fuerte', reason: 'Foco Interno', pitch: null });
+
+    // Dolor Tecnologico
+    let isMG = ['Mediana', 'Grande'].includes(b.tamano);
+    let isCB = ['Boutique', 'Proyecto', 'Desconocido'].includes(b.tamano);
+    let ts = (b.techStack || '').toLowerCase();
+    
+    let dPts = 0;
+    let dReason = '';
+    let dPitch = null;
+    
+    if (isMG && (ts === 'woocommerce' || ts === 'tiendanube')) {
+      dPts = globalDolorConfig.colapso; dReason = 'El Colapso'; dPitch = 'elColapso';
+    } else if ((ts === 'shopify' || ts === 'vtex') && isLocal) {
+      dPts = globalDolorConfig.financiero; dReason = 'Dolor Financiero'; dPitch = 'dolorFinanciero';
+    } else if (isMG && !b.tieneTienda) {
+      dPts = globalDolorConfig.greenfield; dReason = 'Greenfield'; dPitch = 'greenfield';
+    } else if (isCB && (ts === 'woocommerce' || ts === 'tiendanube')) {
+      dPts = globalDolorConfig.d2c; dReason = 'D2C Validado'; dPitch = 'd2cValidado';
+    }
+    
+    if (dPts > 0) {
+      score += dPts;
+      breakdown.push({ val: dPts, cat: 'Dolor IT', reason: dReason, pitch: dPitch });
+    }
+
+    // Assign Tier
+    let tierObj = SCORING_CONFIG.tiers.find(t => score >= t.min) || SCORING_CONFIG.tiers[SCORING_CONFIG.tiers.length-1];
+    
+    // Build Diagnostico
+    let pitches = breakdown.filter(x => x.pitch).sort((a,b) => b.val - a.val).map(x => PITCH_BANK[x.pitch]);
+    
+    let diag = pitches.slice(0,2).join(' ') || 'Oportunidad de prospección estándar sin dolores críticos inminentes evidentes en el mapeo inicial.';
+    
+    let mainPitch = breakdown.find(x => ['elColapso', 'dolorFinanciero', 'greenfield', 'd2cValidado'].includes(x.pitch));
+    b.playbook = (mainPitch && PLAYBOOK_BANK[mainPitch.pitch]) ? PLAYBOOK_BANK[mainPitch.pitch] : null;
+
+    
+    b.score = score;
+    b.tierName = tierObj.name;
+    b.tierPrio = tierObj.priority;
+    b.tierColor = tierObj.color;
+    b.breakdown = breakdown;
+    b.diagnostico = diag;
+  });
+}
+
+applyScoring(DATA);
+
+
+
+window.onChartClick = function(chartId, label, dsLabel) {
+  const map = {
+    'ch-tam': { id: 'f-tam', val: label },
+    'ch-b2b': { id: 'f-merc', val: label },
+    'ch-web': { id: 'f-web', val: label === 'Con sitio web' ? 'si' : 'no' },
+    'ch-tda': { id: 'f-tda', val: label === 'Con tienda online' ? 'si' : 'no' },
+    'ch-zona': { id: 'f-zona', val: label },
+    'ch-grp': { id: 'f-grp', val: label.startsWith('Indep') ? 'Indep.' : label },
+    'ch-tech': { id: 'f-tech', val: label },
+    'ch-vol': { id: 'f-tam', val: label },
+    'ch-cross': { id: 'f-tam', val: label, id2: 'f-tech', val2: dsLabel }
+  };
+  
+  const m = map[chartId];
+  if(m) {
+    let changed = false;
+    const e1 = document.getElementById(m.id);
+    if(e1) { e1.value = m.val; changed = true; }
+    
+    if(m.id2) {
+      const e2 = document.getElementById(m.id2);
+      if(e2) { e2.value = m.val2; changed = true; }
+    }
+    
+    if(changed) {
+      applyFilters();
+      // Scroll to table smoothly
+      document.querySelector('.tsec').scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }
+};
+
+// ═══ STATE ═══
+let filtered = [...DATA];
+let sortCol = 'nombre';
+let sortDir = 1;
+let curPage = 1;
+
+// ═══ COLORS ═══
+const PAL = ['#a871ff','#43e97b','#38a9f5','#ffcd47','#ff6b6b','#f093fb','#4facfe','#00f2fe','#ff9a9e','#a18cd1','#fbc2eb','#96fbc4','#f6d365','#fda085'];
+const TECH_C = {WooCommerce:'#7f54b3',Tiendanube:'#00b1af',Shopify:'#96bf48',VTEX:'#f71963',Whatsapp:'#25d366',Custom:'#a871ff',WixCommerce:'#0C6EFC',Empretienda:'#ff7043',Commerce7:'#e8b43e',Mercadolibre:'#ffe600','Mercado Libre':'#ffe600',Pedix:'#38a9f5',Jumpseller:'#ff6b6b',Magento:'#f46f25',Odoo:'#8569a8',Prestashop:'#DF0067'};
+const charts = {};
+
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function countBy(arr,k){const m={};arr.forEach(d=>{const v=d[k]||'N/A';m[v]=(m[v]||0)+1;});return m;}
+function topN(obj,n){return Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n);}
+
+// ═══ POPULATE FILTERS ═══
+function populateFilters(){
+  const zonas=[...new Set(DATA.map(d=>d.zonaUnif).filter(Boolean))].sort();
+  const sz=document.getElementById('f-zona');
+  zonas.forEach(z=>{const o=new Option(z,z);sz.add(o);});
+    const techs=[...new Set(DATA.map(d=>d.techStack).filter(x=>x&&x!=='No aplica'))].sort();
+  const st=document.getElementById('f-tech');
+  techs.forEach(t=>{const o=new Option(t,t);st.add(o);});
+    const plans=[...new Set(DATA.map(d=>d.plan).filter(Boolean))].sort();
+  const sp=document.getElementById('f-plan');
+  plans.forEach(p=>{const o=new Option(p,p);sp.add(o);});
+  const groups=[...new Set(DATA.map(d=>d.grupo).filter(Boolean))].sort();
+  const sg=document.getElementById('f-grp');
+  groups.forEach(g=>{const o=new Option(g,g);sg.add(o);});
+}
+
+// ═══ STATS ═══
+function updateStats(){
+  const d=filtered;
+  const t=d.length;
+  const tda=d.filter(x=>x.tieneTienda).length;
+  const hi=d.filter(x=>x.exportPct>=50).length;
+  const vol=d.reduce((s,x)=>s+(x.vol||0),0);
+  const zonas=new Set(d.map(x=>x.zonaUnif).filter(Boolean)).size;
+  document.getElementById('kp-total').textContent=t;
+  document.getElementById('kp-tienda').textContent=tda;
+  document.getElementById('kp-tienda-s').textContent=`${Math.round(tda/t*100)}% del total`;
+  document.getElementById('kp-exp').textContent=hi;
+  document.getElementById('kp-vol').textContent=(vol/1e6).toFixed(0)+'M';
+  document.getElementById('kp-zonas').textContent=zonas;
+  document.getElementById('fcount').textContent=t;
+}
+
+// ═══ CHARTS ═══
+function bar(id,labels,data,colors,horizontal=false,yFmt=null){
+  dc(id);
+  const total=data.reduce((s,v)=>s+v,0);
+  const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:colors||PAL.slice(0,labels.length),borderRadius:6,borderSkipped:false}]},
+    options:{
+      indexAxis:horizontal?'y':'x',responsive:true,
+      onClick: (e, els, chart) => {
+        if(els.length>0 && window.onChartClick) {
+          const el = els[0];
+          const label = chart.data.labels[el.index];
+          const dsLabel = chart.data.datasets[el.datasetIndex].label || null;
+          window.onChartClick(id, label, dsLabel);
+        }
+      },
+
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{
+        const v=c.parsed[horizontal?'x':'y'];
+        const p=((v/total)*100).toFixed(1);
+        return yFmt?` ${yFmt(v)}`:(` ${v} bodegas · ${p}% del total`);
+      }}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8b95b0',font:{size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8b95b0',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function donut(id,labels,data){
+  dc(id);
+  const total=data.reduce((s,v)=>s+v,0);
+  const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:PAL.slice(0,labels.length),borderColor:'#111520',borderWidth:3,hoverOffset:8}]},
+    options:{
+      responsive:true,cutout:'62%',
+      onClick: (e, els, chart) => {
+        if(els.length>0 && window.onChartClick) {
+          const el = els[0];
+          const label = chart.data.labels[el.index];
+          window.onChartClick(id, label, null);
+        }
+      },
+
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#8b95b0',font:{size:11},padding:12,boxWidth:12}},
+        tooltip:{callbacks:{label:c=>{const v=c.parsed;const p=((v/total)*100).toFixed(1);return ` ${v} (${p}%)`;}}},
+      }
+    }
+  });
+}
+
+function renderCharts(){
+  const d=filtered;
+  // Update chart meta labels (n=...)
+  const allCharts = ['ch-tam','ch-b2b','ch-web','ch-tda','ch-zona','ch-grp','ch-exp','ch-mf','ch-vol'];
+  allCharts.forEach(id => {
+    const el = document.getElementById('meta-'+id);
+    if(el) el.textContent = 'n=' + d.length;
+  });
+  const wsC = d.filter(x=>x.tieneTienda).length;
+  if(document.getElementById('meta-ch-tech')) document.getElementById('meta-ch-tech').textContent = 'n=' + wsC;
+  if(document.getElementById('meta-ch-cross')) document.getElementById('meta-ch-cross').textContent = 'n=' + wsC;
+
+  const tamOrd=['Desconocido','Proyecto','Boutique','Mediana','Grande'];
+  const tamC=['#ff6b6b','#43e97b','#38a9f5','#a871ff','#ffcd47'];
+
+  // Tamaño
+  const tamM=countBy(d,'tamano');
+  const tL=tamOrd.filter(t=>tamM[t]);
+  bar('ch-tam',tL,tL.map(t=>tamM[t]||0),tamOrd.map((_,i)=>tamC[i]).slice(0,tL.length));
+
+  // B2B
+  const b2bOrd=['DTC','Reg','Nac','Intl','Bout'];
+  
+  donut('ch-tam-pie', tamOrd, tamOrd.map(t=>tamM[t]||0));
+
+  const sh = d.filter(x=>x.techStack==='Shopify');
+  const tn = d.filter(x=>x.techStack==='Tiendanube');
+  
+  const shP = countBy(sh, 'plan');
+  donut('ch-plan-sh', Object.keys(shP), Object.values(shP));
+  if(document.getElementById('meta-ch-plan-sh')) document.getElementById('meta-ch-plan-sh').innerHTML = `<strong>${sh.length}</strong> tiendas Shopify en la muestra actual`;
+
+  
+  // B2B Analytics
+  const tiersCount = countBy(d, 'tierName');
+  const tColors = {'Tier 1': '#ffcd47', 'Tier 2': '#38a9f5', 'Tier 3': '#a871ff', 'Tier 4': '#8b95b0'};
+  const tLabels = Object.keys(tiersCount).sort();
+  donut('ch-tiers', tLabels, tLabels.map(t=>tiersCount[t]), tLabels.map(t=>tColors[t]));
+  
+  const prioCount = countBy(d, 'tierPrio');
+  const pLabels = Object.keys(prioCount).sort();
+  donut('ch-opps', pLabels, pLabels.map(p=>prioCount[p]));
+  
+  // Scoring Promedio por Zona
+  const zScore = {};
+  d.forEach(x => {
+    if(!x.zonaUnif) return;
+    if(!zScore[x.zonaUnif]) zScore[x.zonaUnif] = { s:0, c:0 };
+    zScore[x.zonaUnif].s += x.score;
+    zScore[x.zonaUnif].c++;
+  });
+  const zAvg = Object.entries(zScore)
+    .filter(([z,v]) => v.c >= 3) // min 3 bodegas
+    .map(([z,v]) => ({z, avg: v.s/v.c}))
+    .sort((a,b) => b.avg - a.avg)
+    .slice(0, 5);
+    
+  bar('ch-score-zona', zAvg.map(x=>x.z), zAvg.map(x=>Math.round(x.avg)), ['#a871ff'], true, v=>v+' pts');
+
+  const tnP = countBy(tn, 'plan');
+  donut('ch-plan-tn', Object.keys(tnP), Object.values(tnP));
+  if(document.getElementById('meta-ch-plan-tn')) document.getElementById('meta-ch-plan-tn').innerHTML = `<strong>${tn.length}</strong> tiendas Tiendanube en la muestra actual`;
+  
+  if(document.getElementById('meta-ch-tam-pie')) document.getElementById('meta-ch-tam-pie').textContent = 'n=' + d.length;
+
+  const b2bM=countBy(d,'b2b');
+  const bL=b2bOrd.filter(t=>b2bM[t]);
+  bar('ch-b2b',bL,bL.map(t=>b2bM[t]||0),['#ff6b6b','#43e97b','#38a9f5','#ffcd47','#a871ff'].slice(0,bL.length));
+
+  // Tech stack
+  const ws=d.filter(x=>x.tieneTienda);
+  const tm={};ws.forEach(x=>{const t=x.techStack||'Otro';tm[t]=(tm[t]||0)+1;});
+  const te=topN(tm,99);
+  bar('ch-tech',te.map(e=>e[0]),te.map(e=>e[1]),te.map(e=>TECH_C[e[0]]||'#8b95b0'),true);
+
+  // Web si/no
+  const cw = d.filter(x=>x.web && x.web !== 'No tiene' && x.web !== '').length;
+  donut('ch-web',['Con sitio web','Sin sitio web'],[cw,d.length-cw]);
+
+  // Tienda si/no
+  const ct=d.filter(x=>x.tieneTienda).length;
+  donut('ch-tda',['Con tienda online','Sin tienda online'],[ct,d.length-ct]);
+
+  // Zona
+  const zm=countBy(d,'zonaUnif');
+  const ze=topN(zm,12);
+  bar('ch-zona',ze.map(e=>e[0]),ze.map(e=>e[1]),PAL,true);
+
+  // Grupos
+  const gm={};
+  d.forEach(x=>{const k=x.grupo==='Indep.'?'Independientes':'Grupo / Familia';gm[k]=(gm[k]||0)+1;});
+  donut('ch-grp',Object.keys(gm),Object.values(gm));
+
+  // Exportación tramos
+  const er={'0%':0,'1-15%':0,'16-30%':0,'31-50%':0,'51-75%':0,'+75%':0};
+  d.forEach(x=>{
+    if(!x.exportPct||x.exportPct===0)er['0%']++;
+    else if(x.exportPct<=15)er['1-15%']++;
+    else if(x.exportPct<=30)er['16-30%']++;
+    else if(x.exportPct<=50)er['31-50%']++;
+    else if(x.exportPct<=75)er['51-75%']++;
+    else er['+75%']++;
+  });
+  bar('ch-exp',Object.keys(er),Object.values(er),['#4a5568','#38a9f5','#43e97b','#a871ff','#ffcd47','#ff6b6b']);
+
+  // Mercado fuerte
+  const mfm=countBy(d,'mercFuerte');
+  const mfe=topN(mfm,99);
+  donut('ch-mf',mfe.map(e=>e[0]),mfe.map(e=>e[1]));
+
+  // Volumen promedio por tamaño
+  const vs={},vc={};
+  d.forEach(x=>{if(x.tamano&&x.vol>0){vs[x.tamano]=(vs[x.tamano]||0)+x.vol;vc[x.tamano]=(vc[x.tamano]||0)+1;}});
+  const vL=tamOrd.filter(t=>vs[t]);
+  const vD=vL.map(t=>Math.round((vs[t]||0)/(vc[t]||1)));
+  bar('ch-vol',vL,vD,tamC.slice(0,vL.length),false,v=>`${(v/1000).toFixed(0)}k L`);
+
+  // Cross: tech por tamaño
+  dc('ch-cross');
+  const sws=d.filter(x=>x.tieneTienda);
+  const sizes=['Proyecto','Boutique','Mediana','Grande'];
+  const tkeys=['WooCommerce','Tiendanube','Shopify','VTEX','Whatsapp','Custom','Otro'];
+  const ds=tkeys.map(tech=>({
+    label:tech,
+    data:sizes.map(sz=>sws.filter(x=>x.tamano===sz&&(x.techStack===tech||(tech==='Otro'&&!tkeys.slice(0,-1).includes(x.techStack)))).length),
+    backgroundColor:TECH_C[tech]||'#8b95b0',borderRadius:4,borderSkipped:false
+  }));
+  const ctx=document.getElementById('ch-cross').getContext('2d');
+  charts['ch-cross']=new Chart(ctx,{
+    type:'bar',data:{labels:sizes,datasets:ds},
+    options:{
+      responsive:true,
+      onClick: (e, els, chart) => {
+        if(els.length>0 && window.onChartClick) {
+          const el = els[0];
+          const label = chart.data.labels[el.index];
+          const dsLabel = chart.data.datasets[el.datasetIndex].label;
+          window.onChartClick('ch-cross', label, dsLabel);
+        }
+      },
+      plugins:{
+        legend:{position:'right',labels:{color:'#8b95b0',font:{size:11},padding:10,boxWidth:12}},
+        tooltip:{callbacks:{label:c=>{
+          const tot=c.chart.data.datasets.reduce((s,ds)=>s+(ds.data[c.dataIndex]||0),0);
+          const v=c.parsed.y;
+          const p=tot>0?((v/tot)*100).toFixed(0):0;
+          return ` ${c.dataset.label}: ${v} (${p}%)`;
+        }}}
+      },
+      scales:{
+        x:{stacked:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8b95b0',font:{size:12}}},
+        y:{stacked:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#8b95b0',font:{size:11}}}
+      }
+    }
+  });
+}
+
+
+// ═══ FUNNEL ═══
+const TECH_COLORS = {WooCommerce:'#7f54b3',Tiendanube:'#00b1af',Shopify:'#96bf48',VTEX:'#f71963',Whatsapp:'#25d366',Custom:'#a871ff',WixCommerce:'#0C6EFC',Empretienda:'#ff7043',Commerce7:'#e8b43e',Mercadolibre:'#ffe600','Mercado Libre':'#ffe600',Pedix:'#38a9f5',Jumpseller:'#ff6b6b',Magento:'#f46f25',Odoo:'#8569a8',Prestashop:'#DF0067'};
+
+function renderFunnel(){
+  const d = filtered;
+  const total = d.length;
+
+  // Level 1: con web / sin web
+  const conWeb = d.filter(x => x.web && x.web !== 'No tiene' && x.web !== '');
+  const sinWeb = d.filter(x => !x.web || x.web === 'No tiene' || x.web === '');
+  const nWeb = conWeb.length, nSinWeb = sinWeb.length;
+
+  // Level 2: de los con web, cuántos tienen tienda
+  const conTda = conWeb.filter(x => x.tieneTienda);
+  const sinTda = conWeb.filter(x => !x.tieneTienda);
+  const nTda = conTda.length, nSinTda = sinTda.length;
+
+  // Level 3: plataformas de los con tienda
+  const techMap = {};
+  conTda.forEach(x => { const t = x.techStack || 'Otro'; techMap[t]=(techMap[t]||0)+1; });
+  const techEntries = Object.entries(techMap).sort((a,b)=>b[1]-a[1]);
+
+  // Update base labels
+  document.getElementById('f1-total').textContent = total;
+  document.getElementById('f2-total').textContent = nWeb;
+  document.getElementById('f3-total').textContent = nTda;
+
+  // Draw donut helper
+  function drawDonut(id, labels, data, colors, groupBase, grand) {
+    if(charts[id]) { charts[id].destroy(); delete charts[id]; }
+    const ctx = document.getElementById(id).getContext('2d');
+    charts[id] = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderColor:'#111520', borderWidth:3, hoverOffset:10 }] },
+      options: {
+        responsive: true, cutout: '58%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => {
+            const v = c.parsed;
+            const pGrp = ((v/groupBase)*100).toFixed(1);
+            const pTot = ((v/grand)*100).toFixed(1);
+            return [` ${v} bodegas`, ` ${pGrp}% del grupo · ${pTot}% del total`];
+          }}}
+        }
+      }
+    });
+  }
+
+  // Legend helper
+  function buildLegend(elId, items, colors, groupBase, grand) {
+    const el = document.getElementById(elId);
+    el.innerHTML = items.map((item, i) => {
+      const pGrp = ((item.v/groupBase)*100).toFixed(1);
+      const pTot = ((item.v/grand)*100).toFixed(1);
+      return `<div class="fnl-leg-item">
+        <div class="fnl-dot" style="background:${colors[i]}"></div>
+        <div class="fnl-leg-text" title="${item.label}">${item.label}</div>
+        <div class="fnl-leg-vals">
+          <div class="fnl-leg-n">${item.v}</div>
+          <div class="fnl-leg-pcts">
+            <span class="fnl-pct-grp">${pGrp}%</span>
+            <span class="fnl-pct-sep">·</span>
+            <span class="fnl-pct-tot">${pTot}% total</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // F1: Web
+  const f1Colors = ['#43e97b','#4a5568'];
+  drawDonut('ch-f1', ['Con web','Sin web'], [nWeb, nSinWeb], f1Colors, total, total);
+  buildLegend('leg-f1', [
+    {label:'Con sitio web', v: nWeb},
+    {label:'Sin sitio web', v: nSinWeb}
+  ], f1Colors, total, total);
+
+  // F2: Tienda (base = con web)
+  const f2Colors = ['#a871ff','#2d3550'];
+  drawDonut('ch-f2', ['Con tienda','Sin tienda'], [nTda, nSinTda], f2Colors, nWeb, total);
+  buildLegend('leg-f2', [
+    {label:'Con tienda online', v: nTda},
+    {label:'Sin tienda online', v: nSinTda}
+  ], f2Colors, nWeb, total);
+
+  // F3: Plataformas (base = con tienda)
+  const f3Colors = techEntries.map((e,i) => TECH_COLORS[e[0]] || PAL[i % PAL.length]);
+  drawDonut('ch-f3', techEntries.map(e=>e[0]), techEntries.map(e=>e[1]), f3Colors, nTda, total);
+  buildLegend('leg-f3', techEntries.map(e=>({label:e[0], v:e[1]})), f3Colors, nTda, total);
+
+  // Nested Donut
+  const nestedCtx = document.getElementById('ch-nested').getContext('2d');
+  if(charts['ch-nested']) { charts['ch-nested'].destroy(); }
+  
+  const outerData = [...techEntries.map(e=>e[1]), nSinTda, nSinWeb];
+  const outerColors = [...f3Colors, '#2d3550', '#4a5568'];
+  const outerLabels = [...techEntries.map(e=>e[0]), 'Sin tienda (pero con web)', 'Sin web'];
+
+  const middleData = [nTda, nSinTda, nSinWeb];
+  const middleColors = ['#a871ff', '#2d3550', '#4a5568'];
+  const middleLabels = ['Con tienda online', 'Sin tienda online', 'Sin web'];
+
+  const innerData = [nWeb, nSinWeb];
+  const innerColors = ['#43e97b', '#4a5568'];
+  const innerLabels = ['Con web', 'Sin web'];
+
+  charts['ch-nested'] = new Chart(nestedCtx, {
+    type: 'doughnut',
+    data: {
+      datasets: [
+        { data: outerData, backgroundColor: outerColors, labels: outerLabels, borderColor: '#111520', borderWidth: 2 },
+        { data: middleData, backgroundColor: middleColors, labels: middleLabels, borderColor: '#111520', borderWidth: 2 },
+        { data: innerData, backgroundColor: innerColors, labels: innerLabels, borderColor: '#111520', borderWidth: 2 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => {
+              const ds = c.chart.data.datasets[c.datasetIndex];
+              const label = ds.labels[c.dataIndex];
+              const val = ds.data[c.dataIndex];
+              const pTot = ((val/total)*100).toFixed(1);
+              return ` ${label}: ${val} (${pTot}% del total)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+}
+
+
+// ═══ BODEGA DETAIL ═══
+
+function openBodega(id) {
+  const b = DATA.find(x => x.id === id);
+  if (!b) return;
+
+  const wurl = b.web ? (b.web.startsWith('http') ? b.web : 'https://'+b.web) : '';
+  const turl = b.tienda ? (b.tienda.startsWith('http') ? b.tienda : 'https://'+b.tienda) : '';
+  
+  const webLink = (b.web && b.web !== 'No tiene') ? `<a href="${wurl}" target="_blank" style="color:var(--a1); text-decoration:none;">${b.web}</a>` : '<span class="tz">No tiene</span>';
+  const tdaLink = (b.tieneTienda && b.tienda) ? `<a href="${turl}" target="_blank" style="color:var(--a3); text-decoration:none;">${b.tienda}</a>` : '<span class="tz">No tiene</span>';
+  
+  let playbookHtml = '';
+  if (b.playbook) {
+    let msg = b.playbook.mensaje
+                .replace('[Plataforma]', b.techStack || 'su plataforma')
+                .replace('[Bodega]', b.nombre)
+                .replace('[Nombre]', '_____');
+
+    playbookHtml = `
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px; margin-top:24px;">
+        <h3 style="margin-bottom:16px; display:flex; align-items:center; gap:8px; font-size:16px; color:var(--a1);">⚡ Playbook de Ataque Sugerido</h3>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px; color:var(--tm); text-transform:uppercase; font-weight:700; margin-bottom:8px;">Proceso Comercial</div>
+          <div style="font-size:13px; color:var(--ts); background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:6px; border-left:2px solid var(--a4);">${b.playbook.proceso}</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--tm); text-transform:uppercase; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+            Mensaje Inicial (Cold Message)
+            <button onclick="copyMsg(this)" data-msg="${msg.replace(/"/g, '&quot;')}" style="background:rgba(168,113,255,0.15); color:var(--a1); border:1px solid rgba(168,113,255,0.3); padding:4px 10px; border-radius:100px; font-size:10px; cursor:pointer; font-weight:600; transition:all 0.2s;">📋 Copiar</button>
+          </div>
+          <div style="font-size:13px; color:var(--tx); background:rgba(0,0,0,0.3); padding:16px; border-radius:8px; font-style:italic; border:1px solid rgba(255,255,255,0.05); white-space:pre-wrap;">${msg}</div>
+        </div>
+      </div>
+    `;
+  }
+  
+  let groupHtml = '';
+  if (b.grupo && b.grupo !== 'Indep.' && b.grupo !== 'Independientes') {
+    const mates = DATA.filter(x => x.grupo === b.grupo && x.id !== b.id);
+    const matesVol = mates.reduce((s,x)=>s+(x.vol||0),0) + (b.vol||0);
+    groupHtml = `
+      <div style="background:rgba(168,113,255,0.05); padding:20px; border-radius:12px; border:1px solid rgba(168,113,255,0.2); margin-top:24px;">
+        <div style="font-size:14px; color:var(--a1); font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+          🏢 Parte de: ${b.grupo}
+        </div>
+        <div style="font-size:13px; color:var(--ts); margin-bottom:12px; line-height:1.5;">
+          Este grupo concentra un total de <strong>${mates.length + 1} bodegas</strong>, sumando un volumen conjunto estimado de <strong>${vfmt(matesVol)} L/año</strong>.
+        </div>
+    `;
+    if (mates.length > 0) {
+      groupHtml += `
+        <div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:8px; font-weight:600;">Otras bodegas del grupo:</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          ${mates.map(g => `<span style="background:rgba(255,255,255,0.05); border:1px solid var(--border); padding:4px 10px; border-radius:100px; font-size:11px; color:var(--ts);">${g.nombre}</span>`).join('')}
+        </div>
+      `;
+    }
+    groupHtml += `</div>`;
+  }
+
+  let html = `
+    <h2 style="margin-bottom:4px; display:flex; align-items:center; gap:8px;">${b.nombre}</h2>
+    <div style="font-size:13px; color:var(--ts); margin-bottom:24px;">📍 ${b.zonaUnif} (${b.zona}) · 🇦🇷 ${b.provincia}</div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+      
+      <!-- LADO IZQUIERDO: Diagnóstico y Playbook -->
+      <div>
+        <div style="background: linear-gradient(135deg, rgba(46,204,113,0.05) 0%, rgba(0,0,0,0.2) 100%); border: 1px solid rgba(46,204,113,0.2); border-left: 4px solid ${b.tierColor}; padding:16px; border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="font-weight:700; color:${b.tierColor}; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">${b.tierName}</span>
+              <span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:100px; font-size:12px; color:var(--ts);">${b.score} pts</span>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:var(--a1); text-transform:uppercase; background:rgba(168,113,255,0.15); padding:4px 8px; border-radius:4px;">
+              Prioridad: ${b.tierPrio}
+            </div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+            ${b.breakdown.map(x => `<span style="font-size:11px; font-weight:600; color:var(--ts); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:100px; border:1px solid rgba(255,255,255,0.1);">+${x.val} ${x.cat} (${x.reason})</span>`).join('')}
+          </div>
+          <div style="font-size:13px; color:var(--ts); line-height:1.5;">
+            <strong style="color:var(--tx);">Diagnóstico Comercial:</strong> ${b.diagnostico}
+          </div>
+        </div>
+        
+        ${playbookHtml}
+      </div>
+
+      <!-- LADO DERECHO: Datos Duros -->
+      <div>
+        <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:12px; border:1px solid var(--border); margin-bottom:24px; display:flex; justify-content:space-between; text-align:center;">
+          <div style="flex:1;"><div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:4px;">Tamaño</div><div style="font-size:16px; font-weight:700; color:var(--a1); font-family:'Outfit',sans-serif;">${b.tamano||'—'}</div></div>
+          <div style="flex:1; border-left:1px solid var(--border); border-right:1px solid var(--border);"><div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:4px;">Vol. Anual</div><div style="font-size:16px; font-weight:700; color:var(--tx); font-family:'Outfit',sans-serif;">${vfmt(b.vol)} L</div></div>
+          <div style="flex:1;"><div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:4px;">Líneas</div><div style="font-size:16px; font-weight:700; color:var(--tx); font-family:'Outfit',sans-serif;">${b.lineas||'—'}</div></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:12px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:12px; font-weight:700;">Canales Digitales</div>
+            <div style="margin-bottom:8px; font-size:13px;"><strong>Sitio Web:</strong> ${webLink}</div>
+            <div style="font-size:13px;"><strong>Tienda:</strong> ${tdaLink} ${b.tieneTienda ? `<span class="bdg bs-si" style="padding:2px 6px; font-size:9px; margin-left:4px;">${b.techStack}${b.plan ? ' (' + b.plan + ')' : ''}</span>` : ''}</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); padding:16px; border-radius:12px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--tm); text-transform:uppercase; margin-bottom:12px; font-weight:700;">Perfil Comercial</div>
+            <div style="margin-bottom:8px; font-size:13px;"><strong>Mercado Obj:</strong> <span class="bdg bm-${b.b2b}">${b.b2b||'—'}</span></div>
+            <div style="margin-bottom:8px; font-size:13px;"><strong>Mdo. Fuerte:</strong> ${b.mercFuerte||'—'}</div>
+            <div style="font-size:13px;"><strong>Exportación:</strong> <span style="color:${b.exportPct>=50?'var(--a3)':b.exportPct>=30?'var(--a4)':'var(--tx)'}; font-weight:600;">${b.exportPct}%</span></div>
+          </div>
+        </div>
+
+        ${groupHtml}
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('bodega-modal-content').innerHTML = html;
+  document.getElementById('bodega-modal').classList.add('open');
+}
+
+
+// ═══ TABLE ═══
+function vfmt(v){if(!v)return'—';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'k';return v.toLocaleString('es');}
+
+function renderTable(){
+  const q=document.getElementById('tsearch').value.toLowerCase();
+  const ps=parseInt(document.getElementById('psize').value);
+  let rows=filtered.filter(r=>{
+    if(!q)return true;
+    return[r.nombre,r.zonaUnif,r.zona,r.techStack,r.grupo,r.b2b,r.tamano,r.mercFuerte].join(' ').toLowerCase().includes(q);
+  });
+  rows=[...rows].sort((a,b)=>{
+    let va=a[sortCol],vb=b[sortCol];
+    if(typeof va==='string')va=va.toLowerCase();
+    if(typeof vb==='string')vb=vb.toLowerCase();
+    if(va<vb)return-sortDir;if(va>vb)return sortDir;return 0;
+  });
+  const total=rows.length;
+  const pages=Math.max(1,Math.ceil(total/ps));
+  if(curPage>pages)curPage=pages;
+  const start=(curPage-1)*ps;
+  const pr=rows.slice(start,start+ps);
+  document.getElementById('tbody').innerHTML=pr.map(r=>`
+    <tr onclick="openBodega('${r.id}')" style="cursor:pointer;" title="Ver detalles">
+      <td style="font-weight:700; color:${r.tierColor};"><div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:14px;">${r.score}</span><span style="font-size:9px; background:rgba(255,255,255,0.05); padding:1px 4px; border-radius:4px; margin-top:2px;">${r.tierName}</span></div></td>
+      <td class="tn">${r.nombre}</td>
+      <td class="tz">${r.zonaUnif}</td>
+      <td><span class="bdg bt-${r.tamano||''}">${r.tamano||'—'}</span></td>
+      <td><span class="bdg ${(r.web && r.web !== 'No tiene' && r.web !== '')?'bs-si':'bs-no'}">${(r.web && r.web !== 'No tiene' && r.web !== '')?'✓ Sí':'✗ No'}</span></td>
+      <td><span class="bdg ${r.tieneTienda?'bs-si':'bs-no'}">${r.tieneTienda?'✓ Sí':'✗ No'}</span></td>
+      <td style="color:var(--ts);font-size:12px;">${r.tieneTienda?r.techStack:'—'}</td>
+      <td style="color:${r.exportPct>=50?'var(--a3)':r.exportPct>=30?'var(--a4)':'var(--ts)'};font-weight:600;">${r.exportPct||0}%</td>
+      <td style="color:var(--ts);font-size:12px;">${vfmt(r.vol)}</td>
+      <td style="color:var(--ts);font-size:12px;">${r.grupo||'—'}</td>
+    </tr>`).join('');
+  document.getElementById('pinfo').textContent=`Mostrando ${start+1}–${Math.min(start+ps,total)} de ${total} bodegas`;
+  let b='';
+  b+=`<button class="pb" onclick="cp(${curPage-1})" ${curPage===1?'disabled':''}>‹</button>`;
+  const sp=[];
+  for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-curPage)<=2)sp.push(i);else if(sp[sp.length-1]!=='…')sp.push('…');}
+  sp.forEach(p=>{
+    if(p==='…')b+=`<span style="color:var(--tm);padding:0 4px;">…</span>`;
+    else b+=`<button class="pb ${p===curPage?'act':''}" onclick="cp(${p})">${p}</button>`;
+  });
+  b+=`<button class="pb" onclick="cp(${curPage+1})" ${curPage===pages?'disabled':''}>›</button>`;
+  document.getElementById('pbtns').innerHTML=b;
+}
+function cp(p){curPage=p;renderTable();}
+
+function sortBy(col){
+  if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
+  document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sa','sd'));
+  const thEl=document.getElementById('th-'+col.replace(/[^a-z]/gi,'-').toLowerCase());
+  const idMap={nombre:'th-nombre',zonaUnif:'th-zona',tamano:'th-tam',b2b:'th-b2b',tieneTienda:'th-tda',techStack:'th-tech',mercFuerte:'th-mf',exportPct:'th-exp',vol:'th-vol',lineas:'th-lin',grupo:'th-grp'};
+  const el=document.getElementById(idMap[col]);
+  if(el)el.classList.add(sortDir===1?'sa':'sd');
+  curPage=1;renderTable();
+}
+
+
+function switchTab(t) {
+  document.getElementById('tab-sh').style.display = t === 'sh' ? 'flex' : 'none';
+  document.getElementById('tab-tn').style.display = t === 'tn' ? 'flex' : 'none';
+  document.getElementById('btn-tab-sh').style.color = t === 'sh' ? 'var(--a1)' : 'var(--ts)';
+  document.getElementById('btn-tab-sh').style.fontWeight = t === 'sh' ? '700' : '600';
+  document.getElementById('btn-tab-tn').style.color = t === 'tn' ? 'var(--a1)' : 'var(--ts)';
+  document.getElementById('btn-tab-tn').style.fontWeight = t === 'tn' ? '700' : '600';
+}
+
+// ═══ FILTERS ═══
+
+// ═══ CHIPS ═══
+function removeFilter(id) {
+  document.getElementById(id).value = '';
+  applyFilters();
+}
+
+function renderChips() {
+  const filters = [
+    { id: 'f-zona', label: 'Zona' },
+    { id: 'f-tam', label: 'Tamaño' },
+    { id: 'f-merc', label: 'Mercado' },
+    { id: 'f-tech', label: 'Plataforma' },
+    { id: 'f-plan', label: 'Plan E-comm' },
+    { id: 'f-web', label: 'Sitio Web', valMap: { 'si': 'Con web', 'no': 'Sin web' } },
+    { id: 'f-tda', label: 'Tienda', valMap: { 'si': 'Con tienda', 'no': 'Sin tienda' } },
+    { id: 'f-grp', label: 'Grupo' }
+  ];
+  
+  const chips = [];
+  filters.forEach(f => {
+    const el = document.getElementById(f.id);
+    if(el && el.value) {
+      const val = f.valMap ? f.valMap[el.value] : el.value;
+      chips.push(`<div class="chip"><span>${f.label}:</span> ${val} <button class="chip-btn" onclick="removeFilter('${f.id}')">×</button></div>`);
+    }
+  });
+  
+  const bar = document.getElementById('active-filters-bar');
+  if(chips.length > 0) {
+    document.getElementById('filter-chips').innerHTML = chips.join('');
+    document.getElementById('chip-count').textContent = filtered.length;
+    bar.style.display = 'flex';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function applyFilters(){
+  const z=document.getElementById('f-zona').value;
+  const t=document.getElementById('f-tam').value;
+  const m=document.getElementById('f-merc').value;
+  const td=document.getElementById('f-tda').value;
+  const tc=document.getElementById('f-tech')?document.getElementById('f-tech').value:'';
+  const w=document.getElementById('f-web')?document.getElementById('f-web').value:'';
+  const pl=document.getElementById('f-plan')?document.getElementById('f-plan').value:'';
+  const g=document.getElementById('f-grp').value;
+  const ftier=document.getElementById('f-tier')?document.getElementById('f-tier').value:'';
+  const fpri=document.getElementById('f-prioridad')?document.getElementById('f-prioridad').value:'';
+  const fscoremin=document.getElementById('f-scoremin')?parseInt(document.getElementById('f-scoremin').value):NaN;
+  filtered=DATA.filter(r=>{
+    if(z&&r.zonaUnif!==z)return false;
+    if(t&&r.tamano!==t)return false;
+    if(m&&r.b2b!==m)return false;
+    if(td==='si'&&!r.tieneTienda)return false;
+    if(td==='no'&&r.tieneTienda)return false;
+    if(tc&&r.techStack!==tc)return false;
+    if(pl&&r.plan!==pl)return false;
+    const hasWeb = r.web && r.web !== 'No tiene' && r.web !== '';
+    if(w==='si'&&!hasWeb)return false;
+    if(w==='no'&&hasWeb)return false;
+    if(g&&r.grupo!==g)return false;
+    if(ftier&&r.tierName!==ftier)return false;
+    if(fpri&&r.tierPrio!==fpri)return false;
+    if(!isNaN(fscoremin)&&r.score<fscoremin)return false;
+    return true;
+  });
+  curPage=1;updateStats();renderCharts();renderFunnel();renderTable();renderChips();
+}
+
+function resetFilters(){
+  ['f-zona','f-tam','f-merc','f-tda','f-grp','f-tech','f-web','f-plan'].forEach(id=>document.getElementById(id).value='');
+  filtered=[...DATA];curPage=1;updateStats();renderCharts();renderFunnel();renderTable();renderChips();
+}
+
+// ═══ EXPORT ═══
+function exportCSV(){
+  const h=['Nombre','Zona','Zona Unificada','Tamaño','Mercado','Mdo. Fuerte','Tienda','Tech Stack','Grupo','Export%','Vol. (L)','Líneas'];
+  const rows=filtered.map(r=>[r.nombre,r.zona,r.zonaUnif,r.tamano,r.b2b,r.mercFuerte,r.tieneTienda?'Sí':'No',r.tieneTienda?r.techStack:'—',r.grupo,r.exportPct,r.vol,r.lineas]);
+  const csv=[h,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='bodegas-mendoza-filtradas.csv';a.click();
+}
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded',()=>{
+  populateFilters();updateStats();renderCharts();renderFunnel();renderTable();
+  document.getElementById('funnel-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+  document.getElementById('bodega-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+  document.getElementById('mkt-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+});
+</script>
+</body>
+</html>
